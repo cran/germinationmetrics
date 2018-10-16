@@ -1,4 +1,4 @@
-eea7b05bfac39095ce007911efacc86c *DESCRIPTION
+ea44c65f2a689563cd5c69f3e681916f *DESCRIPTION
 6d2cc23163fe697d3ab141f2e330e397 *NAMESPACE
 75783e9df2b5c8470351030ce09dae02 *NEWS.md
 19bdb14bafa5f72c6c462bd55b1d25e5 *R/CUGerm.R
@@ -17,10 +17,10 @@ edf3c46c75d6be2b96120141eec684d1 *R/MeanGermTime.R
 b10d28e07864941aba7571b24bda5352 *R/t50.R
 d4aee53a7a967fa7cab7d88b819f2f08 *R/xtra.R
 4248431ab2bbf9a5415cd302abdf097d *README.md
-e0d630e73c0fa1d93d25798c2550fcac *build/partial.rdb
+a8aa12500d0822815be73e81e1a50643 *build/partial.rdb
 e783b8f4d144bc5eb276a81acba76b97 *build/vignette.rds
 017e2def64252cdb66fa209392a80b95 *inst/CITATION
-bee5a8202330195fe4178377c0acf154 *inst/REFERENCES.bib
+a95d59b8a63a463dc6e10ae628be9a2f *inst/REFERENCES.bib
 1f4e6cc8a5b7168f162ed0e9e8d07d52 *inst/doc/Introduction.Rmd
 dad734c1638c69ccfa66e91013cc93bd *inst/doc/Introduction.pdf
 7fdc976b1b047bfb21b949d7be651ede *inst/extdata/germinationmetrics.png

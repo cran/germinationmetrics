@@ -1,6 +1,6 @@
 Package: germinationmetrics
 Title: Seed Germination Indices and Curve Fitting
-Version: 0.1.1
+Version: 0.1.1.1
 Authors@R: c(
     person(c("J.", "Aravind"),
     email = "j.aravind@icar.gov.in",
@@ -45,13 +45,16 @@ URL: https://github.com/aravind-j/germinationmetrics,
         https://doi.org/10.5281/zenodo.1219630
 BugReports: https://github.com/aravind-j/germinationmetrics/issues
 NeedsCompilation: no
-Packaged: 2018-07-26 20:13:05 UTC; J. Aravind
+Packaged: 2018-10-07 09:03:39 UTC; ripley
 Author: J. Aravind [aut, cre] (<https://orcid.org/0000-0002-4791-442X>),
   S. Vimala Devi [aut],
   J. Radhamani [aut],
   Sherry Rachel Jacob [aut],
   Kalyani Srinivasan [aut],
   ICAR-NBGPR [cph]
-Maintainer: J. Aravind <j.aravind@icar.gov.in>
+Maintainer: ORPHANED
 Repository: CRAN
-Date/Publication: 2018-07-26 20:30:03 UTC
+Date/Publication: 2018-10-16 06:17:38 UTC
+X-CRAN-Original-Maintainer: J. Aravind <j.aravind@icar.gov.in>
+X-CRAN-Comment: Orphaned on 2018-10-16 as check errors were not
+        corrected despite suggestion and reminder.
