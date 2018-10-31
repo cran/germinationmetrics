@@ -1,11 +1,12 @@
 ---
-title: "The **germinationmetrics** package: A brief introduction"
+title: "The `germinationmetrics` Package: A Brief Introduction"
+author: "Aravind, J., Vimala Devi, S., Radhamani, J., Jacob, S. R., and Kalyani Srinivasan"
+date: "`r Sys.Date()`"
 header-includes:
 - \usepackage{fancyhdr}
 - \usepackage{wrapfig}
 - \pagestyle{fancy}
 - \fancyhead[LE,RO]{\slshape \rightmark}
-- \fancyhead[LO,RE]{The germinationmetrics package{:} A brief introduction}
 - \fancyfoot[C]{\thepage}
 - \usepackage{hyperref}
 - \hypersetup{colorlinks=true}
@@ -16,33 +17,43 @@ header-includes:
 - \usepackage[table]{xcolor}
 - \newcommand{\blandscape}{\begin{landscape}}
 - \newcommand{\elandscape}{\end{landscape}}
+- \fancyhead[LO,RE]{The \texttt{germinationmetrics} Package{:} A Brief Introduction}
 output:
   pdf_document:
     dev: cairo_pdf
     fig_caption: no
+    toc: no
   html_document:
     df_print: paged
+    toc: yes
 csl: frontiers.csl
 bibliography: REFERENCES.bib
 link-citations: yes
-toc: no
 vignette: |
   %\VignetteIndexEntry{Introduction}
   %\usepackage[utf8]{inputenc}
   %\VignetteEngine{knitr::rmarkdown_notangle}
 ---
 
-\begin{center}
- {\it J. Aravind, S. Vimala Devi, J. Radhamani, Sherry R. Jacob and Kalyani Srinivasan}
-\end{center}
+```{r, echo=FALSE}
+out_type <- knitr::opts_knit$get("rmarkdown.pandoc.to")
 
-\begin{center}
- ICAR-National Bureau of Plant Genetic Resources, New Delhi
-\end{center}
+r = getOption("repos")
+r["CRAN"] = "https://cran.rstudio.com/"
+#r["CRAN"] = "https://cloud.r-project.org/"
+#r["CRAN"] = "https://ftp.iitm.ac.in/cran/"
+options(repos = r)
+```
 
-\begin{center}
-`r Sys.Date()`
-\end{center}
+```{r, results='asis', echo=FALSE}
+switch(out_type,
+    html = {cat("<p> ICAR-National Bureau of Plant Genetic Resources, New Delhi.</p>")},
+    latex = cat("\\begin{center}
+ ICAR-National Bureau of Plant Genetic Resources, New Delhi.
+
+\\end{center}" )
+)
+```
 
 \begin{center}
 \vspace{6pt}
@@ -66,7 +77,9 @@ knitr::opts_chunk$set(
     \vspace{-20pt}
 \end{wrapfigure}
 
-## Overview <img src="https://raw.githubusercontent.com/aravind-j/germinationmetrics/master/inst/extdata/germinationmetrics.png" align="right" alt="logo" width="173" height = "200" style = "border: none; float: right;">
+<img src="https://raw.githubusercontent.com/aravind-j/germinationmetrics/master/inst/extdata/germinationmetrics.png" align="right" alt="logo" width="173" height = "200" style = "padding: 10px; border: none; float: right;">
+
+## Overview
 
 The package `germinationmetrics` is a collection of functions which implements various methods for describing the time-course of germination in terms of single-value germination indices as well as fitted curves.
 
@@ -89,11 +102,48 @@ Then the package can be loaded using the function
 library(germinationmetrics)
 ```
 
+\clearpage
+
+## Version History
+The current version of the package is `r as.vector(available.packages()["germinationmetrics",]["Version"])`. The previous versions are as follows.
+
+**Table 1.** Version history of `germinationmetrics` `R` package.
+
+```{r, echo=FALSE, message=FALSE}
+if (requireNamespace("RCurl", quietly = TRUE) & requireNamespace("httr", quietly = TRUE) & requireNamespace("XML", quietly = TRUE)) {
+pkg <- "germinationmetrics"
+link <- paste0("https://cran.r-project.org/src/contrib/Archive/", pkg, "/")
+cafile <- system.file("CurlSSL", "cacert.pem", package = "RCurl")
+page <- httr::GET(link, httr::config(cainfo = cafile))
+page <- httr::content(page, as = 'text')
+# page <- RCurl::getURL(link)
+
+VerHistory <- XML::readHTMLTable(page)[[1]][,2:3]
+colnames(VerHistory) <- c("Version", "Date")
+VerHistory <- VerHistory[VerHistory$Version != "Parent Directory",]
+VerHistory <- VerHistory[!is.na(VerHistory$Version), ]
+VerHistory$Date <- as.Date(VerHistory$Date)
+VerHistory$Version <- gsub("germinationmetrics_", "", VerHistory$Version)
+VerHistory$Version <- gsub(".tar.gz", "", VerHistory$Version)
+
+VerHistory <- VerHistory[order(VerHistory$Date), c("Version", "Date")]
+rownames(VerHistory) <- NULL
+} else {
+print("Packages 'RCurl', 'httr' and 'XML' are required to generate this table")
+}
+
+knitr::kable(VerHistory)
+
+```
+
+To know detailed history of changes use `news(package='germinationmetrics')`.
+
+
 ## Germination count data
 
-Typically in a germination test, the germination count data of a fixed number of seeds is recorded at regular intervals for a definite period of time or until all the seeds have germinated. These germination count data can be either partial or cumulative (Table 1).
+Typically in a germination test, the germination count data of a fixed number of seeds is recorded at regular intervals for a definite period of time or until all the seeds have germinated. These germination count data can be either partial or cumulative (Table 2).
 
-**Table 1 :** A typical germination count data.
+**Table 2 :** A typical germination count data.
 
 ```{r, echo = FALSE}
 data <- data.frame(intervals = 1:14,
@@ -122,7 +172,7 @@ plot(int, cumsum(x))
 
 ## Single-value germination indices
 
-The details about the single-value germination indices implemented in `germinationmetrics` are described in Table 2.
+The details about the single-value germination indices implemented in `germinationmetrics` are described in Table 3.
 
 \newpage
 \blandscape
@@ -130,7 +180,7 @@ The details about the single-value germination indices implemented in `germinati
 \rowcolors{2}{gray!25}{white}
 \renewcommand{\arraystretch}{1.3}
 
-**Table 2 :** Single-value germination indices implemented in `germinationmetrics`.
+**Table 3 :** Single-value germination indices implemented in `germinationmetrics`.
 \footnotesize
 ```{r, echo = FALSE, eval = TRUE}
 load("Indices.rda")
@@ -139,7 +189,7 @@ indices$`function` <- paste("`", indices$`function`, "`", sep = "")
 
 # indices$Details <- gsub("\\r\\n\\r\\n", "$$\\\\, $$", indices$Details)
 # indices$Details <- gsub("$$\\, $$$$", "$$", indices$Details, fixed = TRUE)
-#indices$Details <- paste(indices$Details, "$$\\\\, $$", sep = "")
+# indices$Details <- paste(indices$Details, "$$\\\\, $$", sep = "")
 
 indices$Details <- gsub("\\r\\n", "\\\\\n", indices$Details)
 
@@ -239,9 +289,9 @@ f(x) = y = y_0 + \frac{ax^b}{x^b+c^b}
 $$
 Where, $y$ is the cumulative germination percentage at time $x$, $y_{0}$ is the intercept on the y axis, $a$ is the asymptote, $b$ is a mathematical parameter controlling the shape and steepness of the germination curve and $c$ is the "half-maximal activation level".
 
-The details of various parameters that are computed from this function are given in Table 3.
+The details of various parameters that are computed from this function are given in Table 4.
 
-**Table 3** Germination parameters estimated from the four-parameter hill function.
+**Table 4** Germination parameters estimated from the four-parameter hill function.
 
 \rowcolors{2}{gray!25}{white}
 \renewcommand{\arraystretch}{1.3}
