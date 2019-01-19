@@ -2,6 +2,7 @@
 title: "The `germinationmetrics` Package: A Brief Introduction"
 author: "Aravind, J., Vimala Devi, S., Radhamani, J., Jacob, S. R., and Kalyani Srinivasan"
 date: "`r Sys.Date()`"
+classoption: table
 header-includes:
 - \usepackage{fancyhdr}
 - \usepackage{wrapfig}
@@ -14,7 +15,7 @@ header-includes:
 - \hypersetup{linkcolor=blue}
 - \usepackage{pdflscape}
 - \usepackage{booktabs}
-- \usepackage[table]{xcolor}
+- \usepackage{xcolor}
 - \newcommand{\blandscape}{\begin{landscape}}
 - \newcommand{\elandscape}{\end{landscape}}
 - \fancyhead[LO,RE]{The \texttt{germinationmetrics} Package{:} A Brief Introduction}
@@ -43,6 +44,9 @@ r["CRAN"] = "https://cran.rstudio.com/"
 #r["CRAN"] = "https://cloud.r-project.org/"
 #r["CRAN"] = "https://ftp.iitm.ac.in/cran/"
 options(repos = r)
+
+# Workaround for missing pandoc in CRAN OSX build machines
+out_type <- ifelse(out_type == "", "latex", out_type)
 ```
 
 ```{r, results='asis', echo=FALSE}
@@ -65,6 +69,7 @@ knitr::opts_chunk$set(
   comment = "",
   fig.cap = ""
 )
+
 ```
 
 \tableofcontents
@@ -105,7 +110,13 @@ library(germinationmetrics)
 \clearpage
 
 ## Version History
-The current version of the package is `r as.vector(available.packages()["germinationmetrics",]["Version"])`. The previous versions are as follows.
+```{r, results='asis', echo=FALSE}
+# Fetch release version
+rver <- ifelse(test = gsub("(.\\.)(\\d+)(\\..)", "", getNamespaceVersion("germinationmetrics")) == "",
+               yes = getNamespaceVersion("germinationmetrics"),
+               no = as.vector(available.packages()["germinationmetrics",]["Version"]))
+```
+The current version of the package is `r rver`. The previous versions are as follows.
 
 **Table 1.** Version history of `germinationmetrics` `R` package.
 
@@ -203,10 +214,15 @@ indices$Reference <- gsub("\\[|\\]", "", indices$Reference)
 
 
 ```{r, echo = FALSE, eval = TRUE}
-pander::pander(indices, style='multiline',
-               split.cell = c(15, 18, 50, 10, 10, 10),
+if (requireNamespace("pander", quietly = TRUE) & Sys.which('pandoc') != "" & Sys.which('pandoc-citeproc') != ""){
+  pander::pander(indices, style='grid',
+               split.cell = c(15, 18, 50, 10, 12, 8),
                justify = c('left'), split.table = Inf, keep.line.breaks = TRUE,
                use.hyphening = FALSE, missing = "")
+} else {
+  print("Package 'pander' and pandoc are required to generate this table")
+}
+
 ```
 
 \elandscape
@@ -241,7 +257,7 @@ require(germinationmetrics)
 ```{r, runCode, code = getCode("t50", "germinationmetrics")}
 ```
 
-#### `MeanGermTime(), VarGermTime(), SEGermTime(), CVSEGermTime()`
+#### `MeanGermTime(), VarGermTime(), SEGermTime(), CVGermTime()`
 ```{r, runCode, code = getCode("MeanGermTime", "germinationmetrics")}
 ```
 
@@ -255,6 +271,10 @@ require(germinationmetrics)
 
 #### `GermSpeed(), GermSpeedAccumulated(), GermSpeedCorrected() `
 ```{r, runCode, code = getCode("GermSpeed", "germinationmetrics")}
+```
+
+#### `WeightGermPercent()`
+```{r, runCode, code = getCode("WeightGermPercent", "germinationmetrics")}
 ```
 
 #### `MeanGermPercent(), MeanGermNumber()`
@@ -298,10 +318,14 @@ The details of various parameters that are computed from this function are given
 ```{r, echo = FALSE, eval = TRUE}
 load("Indices.rda")
 fphf$Details <- gsub("\\r\\n", "\\\\\n", fphf$Details)
-pander::pander(fphf, style='multiline',
+if (requireNamespace("pander", quietly = TRUE) & Sys.which('pandoc') != "" & Sys.which('pandoc-citeproc') != ""){
+  pander::pander(fphf, style='grid',
                split.cell = c(15, 50, 10, 10),
                justify = c('left'), split.table = Inf, keep.line.breaks = TRUE,
                use.hyphening = FALSE, missing = "")
+} else {
+  print("Package 'pander' and pandoc are required to generate this table")
+}
 ```
 
 #### Examples
@@ -326,6 +350,13 @@ library("germinationmetrics")
 ```{r, runCode, fig.width = 6, fig.height = 4, code = getCode("plot.FourPHFfit", "germinationmetrics")}
 ```
 
+## Wrapper function
+
+The wrapper function `germination.indices()` can be used to compute multiple germination indices from a data frame of germination counts recorded at specific time intervals for multiple samples in batch.
+
+#### `germination.indices()`
+```{r, runCode, code = getCode("germination.indices", "germinationmetrics")}
+```
 
 ## Citing `germinationmetrics`
 

@@ -8,7 +8,7 @@
 PeakValue(germ.counts, intervals, total.seeds, partial = TRUE)
 
 GermValue(germ.counts, intervals, total.seeds, partial = TRUE,
-  method = c("czabator", "dp"), k = 10)
+  method = c("czabator", "dp"), from.onset = TRUE, k = 10)
 }
 \arguments{
 \item{germ.counts}{Germination counts at each time interval. Can be partial
@@ -25,6 +25,10 @@ partial and if \code{FALSE}, it is considered as cumulative. Default is
 \item{method}{The method for computing germination value. Either
 \code{"czabator"} or \code{"dp"}.}
 
+\item{from.onset}{logical. If \code{TRUE}, duration is considered only from
+the onset of germination. If \code{FALSE}, full duration of germination
+test is considered. Default is \code{TRUE}.}
+
 \item{k}{Constant (See \strong{Details}). Default is 10.}
 }
 \value{
@@ -33,10 +37,11 @@ A list with the following components:  \item{Germination Value}{The
   \item{testend}{The end of test value (Only for method \code{dp}).}
 }
 \description{
-Compute the peak value
-\insertCite{czabator_germination_1962}{germinationmetrics} and germination
-value
-\insertCite{czabator_germination_1962,djavanshir_germination_1976}{germinationmetrics}.
+Compute the Peak value (\ifelse{html}{\out{<i>PV</i>}}{\eqn{PV}}) or
+Emergence Energy (\ifelse{html}{\out{<i>EE</i>}}{\eqn{EE}})
+\insertCite{czabator_germination_1962,bonner_ideal_1967}{germinationmetrics}
+and Germination value (\ifelse{html}{\out{<i>GV</i>}}{\eqn{GV}})
+\insertCite{czabator_germination_1962,djavanshir_germination_1976,brown_representing_1988}{germinationmetrics}.
 }
 \details{
 Peak value (\ifelse{html}{\out{<i>PV</i>}}{\eqn{PV}}) is the maximum quotient
@@ -45,7 +50,10 @@ incubation time \insertCite{czabator_germination_1962}{germinationmetrics}.
 It represents the mean daily germination of the most vigorous component of
 the seed lot, and is a mathematical expression of the break, or shoulder, of
 a typical sigmoid  germination curve
-\insertCite{djavanshir_germination_1976}{germinationmetrics}.
+\insertCite{djavanshir_germination_1976}{germinationmetrics}. It is the
+accumulated number of seeds germinated at the point on the germination curve
+at which the rate of germination starts to decrease. It is also described as
+Emergence energy \insertCite{bonner_ideal_1967}{germinationmetrics}.
 
 For daily germination counts, germination value
 (\ifelse{html}{\out{<i>GV</i>}}{\eqn{GV}}) is computed as follows
@@ -56,7 +64,7 @@ MDG</em></p>}}{\deqn{GV = PV \times MDG}}
 
 Where, \ifelse{html}{\out{<i>PV</i>}}{\eqn{PV}} is the peak value and
 \ifelse{html}{\out{<i>MDG</i>}}{\eqn{MDG}} is the mean daily germination
-percentage.
+percentage from the onset of germination.
 
 Germination value (\ifelse{html}{\out{<i>GV</i>}}{\eqn{GV}}) can also be
 computed for other time intervals of successive germination counts, by
@@ -74,7 +82,7 @@ k</i></p>}}{\deqn{GV = \frac{\sum DGS}{N} \times GP \times k}}
 
 Where, \ifelse{html}{\out{<i>DGS</i>}}{\eqn{DGS}} is the daily germination
 speed computed by dividing cumulative germination percentage by the number of
-days since the beginning of the test, \ifelse{html}{\out{<i>N</i>}}{\eqn{N}}
+days since the onset of germination, \ifelse{html}{\out{<i>N</i>}}{\eqn{N}}
 is the frequency or number of DGS calculated during the test, \eqn{GP} is the
 germination percentage expressed over 100 and
 \ifelse{html}{\out{<i>k</i>}}{\eqn{k}} is a constant. The value of
@@ -84,6 +92,14 @@ daily speed of germination (\ifelse{html}{\out{<em><sup>&sum;DGS</sup>
 10, then \ifelse{html}{\out{<i>k</i>}}{\eqn{k}} value of 10 can be used and
 if it is more than 10, then value of 7 or 8 can be used for
 \ifelse{html}{\out{<i>k</i>}}{\eqn{k}}.
+
+For both methods of computing \ifelse{html}{\out{<i>GV</i>}}{\eqn{GV}}, only
+the duration from the onset of germination is considered by default.
+Alternatively, modified \ifelse{html}{\out{<i>GV</i>}}{\eqn{GV}}
+(\ifelse{html}{\out{<i>GV</sub>mod<sub></i>}}{\eqn{GV_{mod}}}), where the
+entire duration from the beginning of the test is considered can be obtained
+by using the argument \code{from.onset = FALSE}
+\insertCite{brown_representing_1988}{germinationmetrics}.
 }
 \examples{
 
@@ -100,6 +116,10 @@ GermValue(germ.counts = x, intervals = int, total.seeds = 200,
           method = "czabator")
 GermValue(germ.counts = x, intervals = int, total.seeds = 200,
           method = "dp", k = 10)
+GermValue(germ.counts = x, intervals = int, total.seeds = 200,
+          method = "czabator", from.onset = FALSE)
+GermValue(germ.counts = x, intervals = int, total.seeds = 200,
+          method = "dp", k = 10, from.onset = FALSE)
 
 # From cumulative germination counts
 #----------------------------------------------------------------------------
@@ -109,6 +129,10 @@ GermValue(germ.counts = y, intervals = int, total.seeds = 200,
           partial = FALSE, method = "czabator")
 GermValue(germ.counts = y, intervals = int, total.seeds = 200,
           partial = FALSE, method = "dp", k = 10)
+GermValue(germ.counts = y, intervals = int, total.seeds = 200,
+          partial = FALSE, method = "czabator", from.onset = FALSE)
+GermValue(germ.counts = y, intervals = int, total.seeds = 200,
+          partial = FALSE, method = "dp", k = 10, from.onset = FALSE)
 
 }
 \references{

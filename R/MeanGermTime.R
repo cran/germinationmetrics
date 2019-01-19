@@ -15,7 +15,7 @@
 # A copy of the GNU General Public License is available at
 # https://www.r-project.org/Licenses/
 
-#' Germination Time
+#' Germination time
 #'
 #' Compute the following metrics:\describe{ \item{\code{MeanGermTime}}{Mean
 #' germination time (\ifelse{html}{\out{<em><span
@@ -30,7 +30,7 @@
 #' (\ifelse{html}{\out{<em>s<sub><span
 #' style="text-decoration:overline">T</span></sub></em>}}{\eqn{s_{\overline{T}}}})
 #' \insertCite{labouriau_germinacao_1983,ranal_how_2006}{germinationmetrics}.}
-#' \item{\code{CVSEGermTime}}{ Coefficient of variation of the germination time
+#' \item{\code{CVGermTime}}{Coefficient of variation of the germination time
 #' (\ifelse{html}{\out{<i>CV<sub>T</sub></i>}}{\eqn{CV_{T}}})
 #' \insertCite{ranal_how_2006}{germinationmetrics}.} }
 #'
@@ -54,6 +54,12 @@
 #' accumulated number, but the number correspondent to the
 #' \ifelse{html}{\out{<i>i</i>}}{\eqn{i}}th observation) and
 #' \ifelse{html}{\out{<i>k</i>}}{\eqn{k}} is the last time of germination.
+#'
+#' It is the same as Sprouting Index described by
+#' \insertCite{smith_germinating_1964;textual}{germinationmetrics}
+#' (\ifelse{html}{\out{<i>SI</i>}}{\eqn{SI}}) and Germination Resistance
+#' (\ifelse{html}{\out{<i>GR</i>}}{\eqn{GR}}) described by
+#' \insertCite{gordon_observations_1969,gordon_germination_1971;textual}{germinationmetrics}.
 #'
 #' It is the inverse of mean germination rate (\ifelse{html}{\out{<em><span
 #' style="text-decoration:overline">V</span></em>}}{\eqn{\overline{V}}}).
@@ -144,7 +150,7 @@
 #'   For \code{SEGermTime}, the standard error of germination time in the same
 #'   unit of time specified in the argument \code{intervals}.
 #'
-#'   For \code{CVSEGermTime}, the value of coefficient of variation of the
+#'   For \code{CVGermTime}, the value of coefficient of variation of the
 #'   germination time.
 #'
 #' @references
@@ -163,14 +169,14 @@
 #' MeanGermTime(germ.counts = x, intervals = int)
 #' VarGermTime(germ.counts = x, intervals = int)
 #' SEGermTime(germ.counts = x, intervals = int)
-#' CVSEGermTime(germ.counts = x, intervals = int)
+#' CVGermTime(germ.counts = x, intervals = int)
 #'
 #' # From cumulative germination counts
 #' #----------------------------------------------------------------------------
 #' MeanGermTime(germ.counts = y, intervals = int, partial = FALSE)
 #' VarGermTime(germ.counts = y, intervals = int, partial = FALSE)
 #' SEGermTime(germ.counts = y, intervals = int, partial = FALSE)
-#' CVSEGermTime(germ.counts = y, intervals = int, partial = FALSE)
+#' CVGermTime(germ.counts = y, intervals = int, partial = FALSE)
 #'
 #' @seealso \code{\link[germinationmetrics]{MeanGermRate}}
 
@@ -237,7 +243,7 @@ SEGermTime <- function(germ.counts, intervals, partial = TRUE) {
 
 #' @rdname MeanGermTime
 #' @export
-CVSEGermTime <- function(germ.counts, intervals, partial = TRUE) {
+CVGermTime <- function(germ.counts, intervals, partial = TRUE) {
 
   MGT <- MeanGermTime(germ.counts, intervals, partial)
   VGT <- VarGermTime(germ.counts, intervals, partial)

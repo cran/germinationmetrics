@@ -259,7 +259,7 @@ FourPHFfit <- function(germ.counts, intervals, total.seeds, partial = TRUE,
     possibleError <- tryCatch(
 
       nlsLM(
-        csgp ~ FourPHF(x=intervals, a, b, c, y0),
+        csgp ~ FourPHF(x = intervals, a, b, c, y0),
         data = df,
         start = list(a = starta, b = startb, c = startc, y0 = starty0),
         lower = c(a = lowera, b = lowerb, c = lowerc, y0 = lowery0),
@@ -279,7 +279,7 @@ FourPHFfit <- function(germ.counts, intervals, total.seeds, partial = TRUE,
 
       # suppress warnings and rerun above with warnOnly = TRUE
       mod <- suppressWarnings(nlsLM(
-        csgp ~ FourPHF(x=intervals, a, b, c, y0),
+        csgp ~ FourPHF(x = intervals, a, b, c, y0),
         data = df,
         start = list(a = starta, b = startb, c = startc, y0 = starty0),
         lower = c(a = lowera, b = lowerb, c = lowerc, y0 = lowery0),
@@ -354,7 +354,7 @@ FourPHFfit <- function(germ.counts, intervals, total.seeds, partial = TRUE,
   # or time to reach x%  of germination
   txp.Germinated <- (((xp - y0)/100*(c^b))/(1 - ((xp - y0)/100)))^(1/b)
 
-  # Unifromity
+  # Uniformity
   UfmMax <- (((umax - y0)/100*(c^b))/(1 - ((umax - y0)/100)))^(1/b)
   UfmMin <- (((umin - y0)/100*(c^b))/(1 - ((umin - y0)/100)))^(1/b)
   Ufm <- UfmMax - UfmMin

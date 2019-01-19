@@ -1,3 +1,22 @@
+# germinationmetrics  0.1.3
+
+## NEW FUNCTIONS:
+* `WeightGermPercent` - Compute the Weighted germination percentage.
+* `germination.indices` - wrapper function to compute germination indices in batch.
+
+## UPDATED FUNCTIONS:
+* `CVGermTime` - Fixed error in function name (`CVSEGermTime`).
+* `TimsonsIndex` - Fixed error in method name (`khanungar`).
+* `GermSpeed` and `GermSpeedAccumulated` - Updated with option to use percentage germination in addition to germination counts.
+* `GermSpeedCorrected` - Updated with option to use `GermSpeedAccumulated` in addition to `GermSpeed`.
+* `GermValue` - Updated with option to consider time from start of test in addition to time from onset of germination.
+
+## VIGNETTE:
+* Fixed LATEX xcolor options clash issue in vignette.
+
+## OTHER NOTES: 
+* Updated documentation - `GermValue`, `MeanGermTime` and `TimsonsIndex`.
+
 # germinationmetrics  0.1.2
 
 ## OTHER NOTES: 
@@ -13,9 +32,13 @@
 * `plot.FourPHFfit` - plot method for `FourPHFfit`.
 
 ## UPDATED FUNCTIONS:
-* `FourPHFfit` - Fixed code to accomodate changes in the new release of `broom` package.
+* `FourPHFfit` - Fixed code to accommodate changes in the new release of `broom` package.
 * `FourPHFfit` - Separated plot method to new function `plot.FourPHFfit`.
  
+## VIGNETTE:
+* Fixed LATEX xcolor options clash issue in vignette.
+* Fixed issue with missing pandoc in case of r-release-osx-x86_64.
+
 ## OTHER NOTES:
 * Fixed citation information.
 * Added zenodo and rdocumentation badges.
