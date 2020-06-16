@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-18, ICAR-NBPGR.
+### Copyright (C) 2017-20, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,22 +17,19 @@
 
 #' Germination percentage
 #'
-#' Compute the germination percentage or germinability.
+#' Compute the germination percentage or final germination percentage or
+#' germinability.
 #'
-#' Germination percentage is computed as follows \insertCite{ista_chapter_2015}{germinationmetrics}:
+#' Germination percentage is computed as follows
+#' \insertCite{ista_chapter_2015}{germinationmetrics}. \loadmathjax
 #'
-#' \ifelse{html}{\out{<p style="text-align: center;"><i>GP = [N<sub>g</sub>
-#' &frasl; N<sub>t</sub>] &times; 100</i><p>}}{\deqn{GP = \frac{N_{g}}{N_{t}}
-#' \times 100}}
+#' \mjsdeqn{GP = \frac{N_{g}}{N_{t}} \times 100}
 #'
-#' Where, \ifelse{html}{\out{<i>N<sub>g</sub></i>}}{\eqn{N_{g}}} is the number
-#' of germinated seeds and
-#' \ifelse{html}{\out{<i>N<sub>t</sub></i>}}{\eqn{N_{t}}} is the total number of
-#' seeds.
+#' Where, \mjseqn{N_{g}} is the number of germinated seeds and \mjseqn{N_{t}} is
+#' the total number of seeds.
 #'
-#' The value of \ifelse{html}{\out{<i>N<sub>g</sub></i>}}{\eqn{N_{g}}} can be
-#' either specified using the argument \code{germinated.seeds} or is computed
-#' from the \code{germ.counts} argument.
+#' The value of \mjseqn{N_{g}} can be either specified using the argument
+#' \code{germinated.seeds} or is computed from the \code{germ.counts} argument.
 #'
 #' @param germinated.seeds Number of germinated seeds
 #' @param germ.counts Germination counts at each time interval. Can be partial

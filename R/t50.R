@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-18, ICAR-NBPGR.
+### Copyright (C) 2017-20, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,61 +17,40 @@
 
 #' Median germination time
 #'
-#' Compute the median germination time
-#' (\ifelse{html}{\out{<em>t<sub>50</sub></em>}}{\eqn{t_{50}}}). Median
-#' germination time is the time to reach 50\% of final/maximum germination.
+#' Compute the median germination time (\mjseqn{t_{50}}). Median germination
+#' time is the time to reach 50\% of final/maximum germination. \loadmathjax
 #'
 #' With argument \code{method} specified as \code{"coolbear"}, median
 #' germination time is computed according to the formula by
-#' \insertCite{coolbear_effect_1984;textual}{germinationmetrics} as follows:
+#' \insertCite{coolbear_effect_1984;textual}{germinationmetrics} as follows.
 #'
-#' \ifelse{html}{\out{<p style="text-align: center;"><em>t<sub>50</sub> =
-#' T<sub>i</sub> + [ <sup>(((<sup>(N+1)</sup> &frasl; <sub>2</sub> ) &minus;
-#' N<sub>i</sub>)(T<sub>j</sub> &minus; T<sub>i</sub>))</sup> &frasl;
-#' <sub>(N<sub>j</sub> &minus;
-#' N<sub>i</sub>)</sub>]</em></p>}}{\deqn{t_{50}=T_{i}+
-#' \frac{(\frac{N+1}{2}-N_{i})(T_{j}-T_{i})}{N_{j}-N_{i}}}}
+#' \mjsdeqn{t_{50}=T_{i}+
+#' \frac{(\frac{N+1}{2}-N_{i})(T_{j}-T_{i})}{N_{j}-N_{i}}}
 #'
-#' Where, \ifelse{html}{\out{<em>t<sub>50</sub></em>}}{\eqn{t_{50}}} is the
-#' median germination time, \ifelse{html}{\out{<i>N</i>}}{\eqn{N}} is the final
-#' number of germinated seeds and
-#' \ifelse{html}{\out{<em>N<sub>i</sub></em>}}{\eqn{N_{i}}} and
-#' \ifelse{html}{\out{<em>N<sub>j</sub></em>}}{\eqn{N_{j}}} are the total number
-#' of seeds germinated in adjacent counts at time
-#' \ifelse{html}{\out{<em>T<sub>i</sub></em>}}{\eqn{T_{i}}} and
-#' \ifelse{html}{\out{<em>T<sub>j</sub></em>}}{\eqn{T_{j}}} respectively, when
-#' \ifelse{html}{\out{<em>N<sub>i</sub>&nbsp;&lt;&nbsp;<sup>(N+1)</sup>&nbsp;&frasl;&nbsp;<sub>2</sub>&nbsp;&lt;&nbsp;N<sub>j</sub></em>}}{\eqn{N_{i}
-#' < \frac{N + 1}{2} < N_{j}}}.
+#' Where, \mjseqn{t_{50}} is the median germination time, \mjseqn{N} is the
+#' final number of germinated seeds, and \mjseqn{N_{i}} and \mjseqn{N_{j}} are
+#' the total number of seeds germinated in adjacent counts at time
+#' \mjseqn{T_{i}} and \mjseqn{T_{j}} respectively, when \mjseqn{N_{i} < \frac{N
+#' + 1}{2} < N_{j}}.
 #'
 #' Similarly with argument \code{method} specified as \code{"farooq"}, median
 #' germination time is computed according to the formula by  by
-#' \insertCite{farooq_thermal_2005;textual}{germinationmetrics} as follows:
+#' \insertCite{farooq_thermal_2005;textual}{germinationmetrics} as follows.
 #'
-#' \ifelse{html}{\out{<p style="text-align: center;"><em>t<sub>50</sub> =
-#' T<sub>i</sub> + [ <sup>(((<sup>N</sup> &frasl; <sub>2</sub> ) &minus;
-#' N<sub>i</sub>)(T<sub>j</sub> &minus; T<sub>i</sub>))</sup> &frasl;&nbsp;
-#' <sub>(N<sub>j</sub> &minus;
-#' N<sub>i</sub>)</sub>]</em></p>}}{\deqn{t_{50}=T_{i}+
-#' \frac{(\frac{N}{2}-N_{i})(T_{j}-T_{i})}{N_{j}-N_{i}}}}
+#' \mjsdeqn{t_{50}=T_{i}+ \frac{(\frac{N}{2}-N_{i})(T_{j}-T_{i})}{N_{j}-N_{i}}}
 #'
-#' Where, \ifelse{html}{\out{<em>t<sub>50</sub></em>}}{\eqn{t_{50}}} is the
-#' median germination time, \ifelse{html}{\out{<i>N</i>}}{\eqn{N}} is the final
-#' number of germinated seeds and
-#' \ifelse{html}{\out{<em>N<sub>i</sub></em>}}{\eqn{N_{i}}} and
-#' \ifelse{html}{\out{<em>N<sub>j</sub></em>}}{\eqn{N_{j}}} are the total number
-#' of seeds germinated in adjacent counts at time
-#' \ifelse{html}{\out{<em>T<sub>i</sub></em>}}{\eqn{T_{i}}} and
-#' \ifelse{html}{\out{<em>T<sub>j</sub></em>}}{\eqn{T_{j}}} respectively, when
-#' \ifelse{html}{\out{<em>N<sub>i</sub>&nbsp;&lt;&nbsp;<sup>N</sup>&frasl;<sub>2</sub>&nbsp;&lt;&nbsp;N<sub>j</sub></em>}}{\eqn{N_{i}
-#' < \frac{N}{2} < N_{j}}}.
+#' Where, \mjseqn{t_{50}} is the median germination time, \mjseqn{N} is the
+#' final number of germinated seeds, and \mjseqn{N_{i}} and \mjseqn{N_{j}} are
+#' the total number of seeds germinated in adjacent counts at time
+#' \mjseqn{T_{i}} and \mjseqn{T_{j}} respectively, when \mjseqn{N_{i} <
+#' \frac{N}{2} < N_{j}}.
 #'
 #' @inheritParams MeanGermTime
 #' @param method The method for computing median germination time. Either
 #'   \code{"coolbear"} or \code{"farooq"}.
 #'
-#' @return The median germination time
-#'   (\ifelse{html}{\out{<em>t<sub>50</sub></em>}}{\eqn{t_{50}}}) value in the
-#'   same unit of time as specified in the argument \code{intervals}.
+#' @return The median germination time (\mjseqn{t_{50}}) value in the same unit
+#'   of time as specified in the argument \code{intervals}.
 #'
 #' @export
 #'
@@ -110,8 +89,9 @@ t50 <- function(germ.counts, intervals, partial = TRUE,
   }
 
   # Check if intervals are uniform
-  if (length(unique(diff(intervals))) != 1) {
-    stop("'intervals' are not uniform.")
+  idiff <- diff(intervals)
+  if (!all(abs(idiff - idiff[[1]]) < .Machine$double.eps ^ 0.5)) {
+    warning("'intervals' are not uniform.")
   }
 
   # Check if germ.counts and intervals are of equal length
@@ -140,16 +120,31 @@ t50 <- function(germ.counts, intervals, partial = TRUE,
     xhalf <- sum(x)/2
   }
 
-  nearest <- c(match(max(csx[csx <= xhalf]), csx), match(min(csx[csx >= xhalf]), csx))
+  if (x[1] < xhalf) {
+    nearest <- c(match(max(csx[csx <= xhalf]), csx), match(min(csx[csx >= xhalf]), csx))
 
-  if (nearest[2] == nearest[1]) {
-    t50 <- as.numeric(intervals[nearest[1]])
-  } else {
-    if (nearest[2] > nearest[1]) {
-      t50 <- intervals[nearest[1]] + ((xhalf - csx[nearest[1]])*(intervals[nearest[2]] - intervals[nearest[1]]))/(csx[nearest[2]] - csx[nearest[1]])
+    if (nearest[2] == nearest[1]) {
+      t50 <- as.numeric(intervals[nearest[1]])
     } else {
-      t50 <- NA_real_
+      if (nearest[2] > nearest[1]) {
+        t50 <- intervals[nearest[1]] + ((xhalf - csx[nearest[1]])*(intervals[nearest[2]] - intervals[nearest[1]]))/(csx[nearest[2]] - csx[nearest[1]])
+      } else {
+        t50 <- NA_real_
+      }
     }
+  } else {
+    if (method == "coolbear") {
+      cmt <- "((N + 1)/2) "
+    }
+
+    if (method == "farooq") {
+      cmt <- "(N/2) "
+    }
+
+    warning("'t50' cannot be computed as more than half the seeds ",
+            cmt,
+            "have germinated at first interval.")
+    t50 <- NA_real_
   }
 
   return(unname(t50))

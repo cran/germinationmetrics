@@ -4,7 +4,8 @@
 \name{gcdata}
 \alias{gcdata}
 \title{Germination count data}
-\format{A data frame with 17 columns: \describe{ \item{Genotype}{The
+\format{
+A data frame with 17 columns: \describe{ \item{Genotype}{The
   genotype.} \item{Rep}{Replication.} \item{Day01}{Number of seeds that
   germinated (germination counts) on Day 1.} \item{Day02}{Number of seeds
   that germinated (germination counts) on Day 2.} \item{Day03}{Number of
@@ -21,7 +22,8 @@
   seeds that germinated (germination counts) on Day 12.} \item{Day13}{Number
   of seeds that germinated (germination counts) on Day 13.}
   \item{Day14}{Number of seeds that germinated (germination counts) on Day
-  14.} \item{Total Seeds}{Total number of seeds tested.} }}
+  14.} \item{Total Seeds}{Total number of seeds tested.} }
+}
 \usage{
 gcdata
 }
@@ -31,6 +33,7 @@ An example germination count dataset. It includes germination count data over
 }
 \examples{
 
+\donttest{
 data(gcdata)
 library(ggplot2)
 library(reshape2)
@@ -81,6 +84,7 @@ counts.per.intervals <- c("Day01", "Day02", "Day03", "Day04", "Day05",
 germination.indices(gcdata, total.seeds.col = "Total Seeds",
                     counts.intervals.cols = counts.per.intervals,
                     intervals = 1:14, partial = TRUE, max.int = 5)
+}
 
 }
 \keyword{datasets}

@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-18, ICAR-NBPGR.
+### Copyright (C) 2017-20, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,42 +19,31 @@
 #' Mean germination percentage and number of seeds per time interval
 #'
 #' Compute the following metrics:\describe{ \item{\code{MeanGermPercent}}{
-#' Mean/average germination percentage per unit time
-#' (\ifelse{html}{\out{<em><span
-#' style="text-decoration:overline">GP</span></em>}}{\eqn{\overline{GP}}})
+#' Mean/average germination percentage per unit time (\mjseqn{\overline{GP}})
 #' \insertCite{czabator_germination_1962}{germinationmetrics}. }
 #' \item{\code{MeanGermNumber}}{Number of seeds germinated per unit time
-#' (\ifelse{html}{\out{<em><span style="text-decoration:
-#' overline">N</span></em>}}{\eqn{\overline{N}}})
-#' \insertCite{khamassi_optimal_2013}{germinationmetrics}.}}
+#' (\mjseqn{\overline{N}})
+#' \insertCite{khamassi_optimal_2013}{germinationmetrics}.}} \loadmathjax
 #'
-#' Mean germination percentage per unit time (\ifelse{html}{\out{<em><span
-#' style="text-decoration:overline">GP</span></em>}}{\eqn{\overline{GP}}}) is
+#' Mean germination percentage per unit time (\mjseqn{\overline{GP}}) is
 #' computed as follows
 #' \insertCite{czabator_germination_1962}{germinationmetrics}.
 #'
-#' \ifelse{html}{\out{<p style="text-align: center;"><em><span
-#' style="text-decoration: overline;">GP</span> = <sup>GP</sup> &frasl;
-#' <sub>T<sub>n</sub></sub></em></p>}}{\deqn{\overline{G} =
-#' \frac{GP}{T_{n}}}{MGP = GP/Tf}}
+#' \mjsdeqn{\overline{GP} = \frac{GP}{T_{k}}}
 #'
-#' Where, \ifelse{html}{\out{<i>GP</i>}}{\eqn{GP}} is the final germination
-#' percentage and \ifelse{html}{\out{<em>T<sub>n</sub></em>}}{\eqn{T_{n}}} is
-#' the total number of intervals(e.g. days) required for final germination.
+#' Where, \mjseqn{GP} is the final germination percentage, \mjseqn{T_{k}} is the
+#' time at the \mjseqn{k}th time interval, and \mjseqn{k} is the total number of
+#' time intervals required for final germination.
 #'
-#' Mean number of seeds germinated per unit time (\ifelse{html}{\out{<em><span
-#' style="text-decoration: overline">N</span></em>}}{\eqn{\overline{N}}}) is
+#' Mean number of seeds germinated per unit time (\mjseqn{\overline{N}}) is
 #' computed as follows \insertCite{khamassi_optimal_2013}{germinationmetrics}.
 #'
-#' \ifelse{html}{\out{<p style="text-align: center;"><em><span
-#' style="text-decoration: overline;">N</span> = <sup>N<sub>g</sub></sup>
-#' &frasl; <sub>T<sub>n</sub></sub></em></p>}}{\deqn{\overline{N} =
-#' \frac{N_{g}}{T_{n}}}}
+#' \mjsdeqn{\overline{N} = \frac{N_{g}}{T_{k}}}
 #'
-#' Where, \ifelse{html}{\out{<em>N<sub>g</sub></em>}}{\eqn{N_{g}}} is the number
-#' of germinated seeds and
-#' \ifelse{html}{\out{<em>T<sub>n</sub></em>}}{\eqn{T_{n}}} is the total number
-#' of intervals (e.g. days) required for final germination.
+#' Where, \mjseqn{N_{g}} is the number of germinated seeds at the end of the
+#' germination test, \mjseqn{T_{k}} is the time at the \mjseqn{k}th time
+#' interval, and \mjseqn{k} is the total number of time intervals required for
+#' final germination.
 #'
 #' @inheritParams GermPercent
 #' @inheritParams MeanGermTime
@@ -138,8 +127,9 @@ MeanGermPercent <- function(germinated.seeds, germ.counts, total.seeds, interval
   }
 
   # Check if intervals are uniform
-  if (length(unique(diff(intervals))) != 1) {
-    stop("'intervals' are not uniform.")
+  idiff <- diff(intervals)
+  if (!all(abs(idiff - idiff[[1]]) < .Machine$double.eps ^ 0.5)) {
+    warning("'intervals' are not uniform.")
   }
 
   MGP <- GP/intervals[length(intervals)]
@@ -162,8 +152,9 @@ MeanGermNumber <- function(germ.counts, intervals, partial = TRUE) {
   }
 
   # Check if intervals are uniform
-  if (length(unique(diff(intervals))) != 1) {
-    stop("'intervals' are not uniform.")
+  idiff <- diff(intervals)
+  if (!all(abs(idiff - idiff[[1]]) < .Machine$double.eps ^ 0.5)) {
+    warning("'intervals' are not uniform.")
   }
 
   # Check if germ.counts and intervals are of equal length

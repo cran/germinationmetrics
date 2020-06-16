@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-18, ICAR-NBPGR.
+### Copyright (C) 2017-20, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@ if (getRversion() >= "2.15.1")  {
       "GermSpeedAccumulated_Count", "GermSpeedAccumulated_Percent",
       "GermSpeedCorrected_Normal", "GermSpeedCorrected_Accumulated",
       "TimsonsIndex_Labouriau", "TimsonsIndex_KhanUngar", "GermValue_Czabator",
-      "GermValue_DP", "GermValue_Czabator_mod", "GermValue_DP_mod")
+      "GermValue_DP", "GermValue_Czabator_mod", "GermValue_DP_mod","GermIndex_mod",
+      "EmergenceRateIndex_Melville", "EmergenceRateIndex_Melville_mod",
+      "EmergenceRateIndex_BilbroWanjura", "EmergenceRateIndex_Fakorede", ".")
   )
 }

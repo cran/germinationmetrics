@@ -1,3 +1,29 @@
+# germinationmetrics  0.1.4
+
+## NEW FUNCTIONS:
+* `FourPHFfit.bulk` - Wrapper function around `FourPHFfit` for multiple samples.
+* `GermIndex` - Compute germination index according to Melville et al., (1980).
+* `EmergenceRateIndex` - Compute emergence rate index according to Shmueli and
+Goldberg (1971), Bilbro and Wanjura (1982), and Fakorede and Ayoola (1980).
+
+## UPDATED FUNCTIONS:
+* `FourPHFfit` - Added more checks for the input arguments `umax`, `umin`, `xp`, `tries` and `tmax`.
+* `MeanGermPercent`, `MeanGermNumber`, `GermSynchrony`, `GermUncertainty`, `TimsonsIndex`, `GermRateGeorge`, `GermSpeed`, `GermSpeedAccumulated`, `FirstGermTime`, `GermValue`, `PeakValue`, `WeightGermPercent`, `t50`, `MeanGermRate`, `MeanGermTime`, `germination.indices`, `FourPHFfit` and `FourPHFfit.bulk` - Fixed the check for uniformity of intervals to handle non-integer values correctly. Closes issue #3.(Thanks to Jonas Ohlsson [@jonasoh])
+* `TimsonsIndex` and `GermRateGeorge`- Fixed to handle interval data other than days.
+
+## VIGNETTE:
+* Fixed details of Median germination time in Table 3.
+* Fixed typo in formula for CUG in Table 3.
+* Added reference for Coefficient of variation of the germination time in Table 3.
+* Reverted to using system certificates instead of RCurl ones for fetching and displaying version history as suggested by Prof. Brian Ripley (ripley@stats.ox.ac.uk).
+
+## OTHER NOTES: 
+* Error in case of non-uniform intervals converted to warning.
+* Fixed documentation errors in `FourPHFfit` and `CVGermTime`.
+* Updated documentation for `GermSpeed`, `GermSpeedAccumulated`, `CUGerm` `MeanGermRate`, `SEGermRate`, `CVG`, `MeanGermTime`, `VarGermTime`, `SEGermTime`, `GermUncertainty`, `GermSynchrony`, `MeanGermPercent`, `MeanGermNumber`,   `WeightGermPercent`, `TimsonsIndex`, `GermRateGeorge` and `GermSynchrony`.
+* Converted all equations in Rd files to `MathJax`using `mathjaxr`
+* Added long running examples to `\donttest` in `germination.indices`, `plot.FourPHFfit`, `gcdata` and `FourPHFfit.bulk`.
+
 # germinationmetrics  0.1.3
 
 ## NEW FUNCTIONS:

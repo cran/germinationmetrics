@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-18, ICAR-NBPGR.
+### Copyright (C) 2017-20, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,99 +18,94 @@
 #' Timson's index
 #'
 #' Compute George's index
-#' \insertCite{george_influence_1961;textual}{germinationmetrics}, Timson's
-#' index or Timson's germination velocity index
-#' \insertCite{grose_laboratory_1958,timson_new_1965}{germinationmetrics} and it's modifications by
-#' Labouriau \insertCite{ranal_how_2006}{germinationmetrics} and
-#' \insertCite{khan_effect_1984}{germinationmetrics}.
+#' \insertCite{george_influence_1961,tucker_estimating_1965,nichols_two_1968,chopraEffectSoilTemperature1980}{germinationmetrics},
+#' Timson's index or Timson's germination velocity index
+#' \insertCite{grose_laboratory_1958,timson_new_1965,lyonRapidMethodDetermining1966,chaudharyEffectTemperatureAssociated1970,negmEffectsEthyleneCarbon1978,brown_representing_1988,baskin_seeds_1998}{germinationmetrics}
+#' and it's modifications by Labouriau
+#' \insertCite{ranal_how_2006}{germinationmetrics} and
+#' \insertCite{khan_effect_1984}{germinationmetrics}. \loadmathjax
 #'
 #' Timson's index \insertCite{timson_new_1965}{germinationmetrics} is computed
 #' as follows
-#' \insertCite{grose_laboratory_1958,brown_representing_1988,baskin_seeds:_1998}{germinationmetrics}.
+#' \insertCite{grose_laboratory_1958,brown_representing_1988,baskin_seeds_1998}{germinationmetrics}.
 #'
-#' \ifelse{html}{\out{<p style="text-align: center;"><em>&sum;n =
-#' &sum;<sup>t</sup><sub style="line-height: 1.8; margin-left: -1ex;">i=1
-#' </sub>G<sub>i</sub></em></p>}}{\deqn{\sum n = \sum_{i=1}^{t}G_{i}}}
+#' \mjsdeqn{\Sigma k = \sum_{i=1}^{k}G_{i}}
 #'
-#' Where, \ifelse{html}{\out{<i>G<sub>i</sub></i>}}{\eqn{G_{i}}} is the
-#' cumulative germination percentage in time interval
-#' \ifelse{html}{\out{<i>i</i>}}{\eqn{i}} and
-#' \ifelse{html}{\out{<i>t</i>}}{\eqn{t}} is the total number of time intervals.
+#' Where, \mjseqn{G_{i}} is the cumulative germination percentage in time
+#' interval \mjseqn{i} and \mjseqn{k} is the total number of time intervals.
 #'
-#' For example ten summation (\eqn{\Sigma 10}) is expressed as follows:
+#' For example ten summation (\mjseqn{\Sigma 10}) is expressed as follows.
 #'
-#' \ifelse{html}{\out{<p style="text-align: center;"><em>&sum; 10 =
-#' G<sub>1</sub> + G<sub>2</sub> + G<sub>3</sub> +&hellip;+
-#' G<sub>10</sub></em></p>}}{\deqn{\sum 10 = G_{1}+G_{2}+\cdots+G_{10}}}
+#' \mjsdeqn{\Sigma 10 = G_{1}+G_{2}+\cdots+G_{10}}
 #'
-#' Where \ifelse{html}{\out{<em>G<sub>1</sub>, G<sub>2</sub>, G<sub>3</sub>,
-#' &hellip; G<sub>10</sub></em>}}{\eqn{G_{1},G_{2},\cdots G_{10}}} are the
-#' cumulative germination percentage at day 1, 2, 3,
-#' \ifelse{html}{\out{&hellip;}}{\eqn{\cdots}}, 10 respectively.
+#' Where \mjseqn{G_{1},G_{2},\cdots G_{10}} are the cumulative germination
+#' percentage at day 1, 2, 3, \mjseqn{\cdots}, 10 respectively.
 #'
-#' Similarly \eqn{\Sigma 5} or \eqn{\Sigma 20} can be estimated. For \eqn{\Sigma
-#' 10}, the value can range from 0 (no germination) to 1,000 (100\% germination
-#' after 24 hours).
+#' Similarly \mjseqn{\Sigma 5} or \mjseqn{\Sigma 20} can be estimated. For
+#' \mjseqn{\Sigma 10}, the value can range from 0 (no germination) to 1,000
+#' (100\% germination after 24 hours).
 #'
 #' It is the progressive total of cumulative germination percentage recorded at
 #' specific intervals for a set period of time.  It combines onset, rate and
 #' total percentage of germination and estimates the area under the cumulative
-#' germination percentage curve.
+#' germination percentage curve. It is same as the indices for area under time
+#' course curve of germination described by
+#' \insertCite{lyonRapidMethodDetermining1966;textual}{germinationmetrics} as
+#' well as
+#' \insertCite{negmEffectsEthyleneCarbon1978;textual}{germinationmetrics}. It is
+#' also described as Emergence Rate Index (\mjseqn{ERI}) by
+#' \insertCite{chaudharyEffectTemperatureAssociated1970;textual}{germinationmetrics}.
 #'
 #' \insertCite{goodchild_method_1971;textual}{germinationmetrics}, described the
-#' same in terms of partial germination percentage as follows:
+#' same in terms of partial germination percentage as follows.
 #'
-#' \ifelse{html}{\out{<p style="text-align: center;"><em>&sum;n =
-#' &sum;<sup>t</sup><sub style="line-height: 1.8; margin-left: -1ex;">i=1 </sub>
-#' g<sub>i</sub>(t-j)</em></p>}}{\deqn{\sum n = \sum_{i=1}^{t}g_{i}(t-j)}}
+#' \mjsdeqn{\Sigma k = \sum_{i=1}^{k}g_{i}(k-j)}
 #'
-#' Where, \ifelse{html}{\out{<i>g<sub>i</sub></i>}}{\eqn{g_{i}}} is the
-#' germination (not cumulative, but partial germination) in time interval
-#' \ifelse{html}{\out{<i>i</i>}}{\eqn{i}}
-#' (\ifelse{html}{\out{<i>i</i>}}{\eqn{i}} varying from
-#' \ifelse{html}{\out{<i>0</i>}}{\eqn{0}} to
-#' \ifelse{html}{\out{<i>t</i>}}{\eqn{t}}) and
-#' \ifelse{html}{\out{<i>t</i>}}{\eqn{t}} is the total number of time intervals
-#' and \ifelse{html}{\out{<i>j = i - 1</i>}}{\eqn{j = i - 1}}.
+#' Where, \mjseqn{g_{i}} is the germination (not cumulative, but partial
+#' germination) in time interval \mjseqn{i} (\mjseqn{i} varying from \mjseqn{0}
+#' to \mjseqn{k}), \mjseqn{k} is the total number of time intervals, and
+#' \mjseqn{j = i - 1}.
 #'
-#' Timson's index is equivalent to the Germination Energy Index
-#' \ifelse{html}{\out{<i>GEI</i>}}{\eqn{GEI}}proposed by
-#' \insertCite{grose_laboratory_1958;textual}{germinationmetrics}.
-#'
-#' Timson's index is similar to the germination rate proposed by
-#' \insertCite{george_influence_1961;textual}{germinationmetrics} as follows
-#' \insertCite{tucker_estimating_1965,nichols_two_1968}{germinationmetrics}.
-#'
-#' \ifelse{html}{\out{<p style="text-align: center;"><em>GR =
-#' &sum;<sup>t</sup><sub style="line-height: 1.8; margin-left: -1ex;">i=1 </sub>
-#' N<sub>i</sub>K<sub>i</sub></em></p>}}{\deqn{GR = \sum_{i=1}^{t}N_{i}K_{i}}}
-#'
-#' Where \ifelse{html}{\out{<em>N<sub>i</sub></em>}}{\eqn{N_{i}}} is the number
-#' of seeds germinated by \ifelse{html}{\out{<i>i</i>}}{\eqn{i}}th interval and
-#' \ifelse{html}{\out{<em>K<sub>i</sub></em>}}{\eqn{K_{i}}} is the number of
-#' intervals(e.g. days) until the end of the test.
-#'
-#' This index uses number of seeds germinated instead of germination percentage.
+#' Timson's index is equivalent to the Germination Energy Index \mjseqn{GEI}
+#' proposed by \insertCite{grose_laboratory_1958;textual}{germinationmetrics}.
 #'
 #' As Timson's index is useful for comparison only when samples have similar
 #' germinabilities or final germination percentage, the following modification
 #' was suggested by Labouriau \insertCite{ranal_how_2006}{germinationmetrics}.
 #'
-#' \ifelse{html}{\out{<p style="text-align: center;">T<sub>mod</sub> =
-#' <sup>T</sup> &frasl; <sub>&sum;<sup>t</sup><sub style="line-height: 1.8;
-#' margin-left: -1ex;">i=1 </sub>g<sub>i</sub></sub></p>}}{\deqn{T_{mod} =
-#' \frac{T}{\sum_{i=1}^{t}g_{i}}}}
+#' \mjsdeqn{\Sigma k_{mod} = \frac{\Sigma k}{\sum_{i=1}^{k}g_{i}}}
 #'
-#' Here Timson's index (\ifelse{html}{\out{<i>t</i>}}{\eqn{t}}) is divided by
-#' the sum of partial germination percentages.
+#' Here Timson's index (\mjseqn{\Sigma k}) is divided by the sum of partial
+#' germination percentages.
 #'
 #' Similarly another modification was proposed by
 #' \insertCite{khan_effect_1984}{germinationmetrics}, where Timson's index
-#' (\ifelse{html}{\out{<i>t</i>}}{\eqn{t}}) is divided by number of intervals
-#' (\ifelse{html}{\out{<i>t</i>}}{\eqn{t}}).
+#' (\mjseqn{\Sigma k}) is divided by the total time period of germination
+#' (\mjseqn{T_{k}}).
 #'
-#' \ifelse{html}{\out{<p style="text-align: center;">T<sub>mod</sub> =
-#' <sup>T</sup> &frasl; <sub>t</sub></p>}}{\deqn{T_{mod} = \frac{T}{t}}}
+#' \mjsdeqn{\Sigma k_{mod} = \frac{\Sigma k}{T_{k}}}
+#'
+#' Timson's index is similar to the Germination Rate (\mjseqn{GR}) proposed by
+#' \insertCite{george_influence_1961;textual}{germinationmetrics} as follows
+#' \insertCite{tucker_estimating_1965,nichols_two_1968}{germinationmetrics}.
+#'
+#' \mjsdeqn{GR = \sum_{i=1}^{k}N_{i}K_{i}}
+#'
+#' Where \mjseqn{N_{i}} is the number of seeds germinated by \mjseqn{i}th
+#' interval, \mjseqn{K_{i}} is the number of intervals(e.g. days) until the end
+#' of the test, and \mjseqn{k} is the total number of time intervals.
+#'
+#' This index uses number of seeds germinated instead of germination percentage.
+#' It is also described as Emergence Rate Index (\mjseqn{ERI}) by
+#' \insertCite{chopraEffectSoilTemperature1980;textual}{germinationmetrics}.
+#'
+#' So germination rate (\mjseqn{GR}) can also be described in terms of partial
+#' (\mjseqn{N_{i}}) and cumulative (\mjseqn{\sum_{j=1}^{i}N_{j}}) number of
+#' seeds germinated in each time interval (\mjseqn{i}) as follows.
+#'
+#' \mjsdeqn{GR = \sum_{i=1}^{k}\sum_{j=1}^{i}N_{j}}
+#'
+#' \mjsdeqn{GR = \sum_{i=1}^{k}N_{i}(k-j)}
 #'
 #' @inheritParams MeanGermTime
 #' @param total.seeds Total number of seeds.
@@ -145,6 +140,8 @@
 #'              modification = "labouriau")
 #' TimsonsIndex(germ.counts = x, intervals = int, total.seeds = 50,
 #'              modification = "khanungar")
+#' GermRateGeorge(germ.counts = x, intervals = int)
+#'
 #' # With max specified
 #' TimsonsIndex(germ.counts = x, intervals = int, total.seeds = 50, max = 10)
 #' TimsonsIndex(germ.counts = x, intervals = int, total.seeds = 50,
@@ -153,22 +150,42 @@
 #'              max = 10, modification = "labouriau")
 #' TimsonsIndex(germ.counts = x, intervals = int, total.seeds = 50,
 #'              max = 10, modification = "khanungar")
-#'
-#' # Wihout max specified
-#' GermRateGeorge(germ.counts = x, intervals = int)
-#' # With max specified
 #' GermRateGeorge(germ.counts = x, intervals = int, max = 10)
 #' GermRateGeorge(germ.counts = x, intervals = int, max = 14)
 #'
+#'
 #' # From cumulative germination counts
 #' #----------------------------------------------------------------------------
-#'
-#'
 #' # Wihout max specified
-#' GermRateGeorge(germ.counts = x, intervals = int, partial = TRUE)
+#' TimsonsIndex(germ.counts = y, intervals = int, partial = FALSE,
+#'              total.seeds = 50)
+#' TimsonsIndex(germ.counts = y, intervals = int, partial = FALSE,
+#'              total.seeds = 50,
+#'              modification = "none")
+#' TimsonsIndex(germ.counts = y, intervals = int, partial = FALSE,
+#'              total.seeds = 50,
+#'              modification = "labouriau")
+#' TimsonsIndex(germ.counts = y, intervals = int, partial = FALSE,
+#'              total.seeds = 50,
+#'              modification = "khanungar")
+#' GermRateGeorge(germ.counts = y, intervals = int, partial = FALSE,)
+#'
 #' # With max specified
-#' GermRateGeorge(germ.counts = x, intervals = int, partial = TRUE, max = 10)
-#' GermRateGeorge(germ.counts = x, intervals = int, partial = TRUE, max = 14)
+#' TimsonsIndex(germ.counts = y, intervals = int, partial = FALSE,
+#'              total.seeds = 50, max = 10)
+#' TimsonsIndex(germ.counts = y, intervals = int, partial = FALSE,
+#'              total.seeds = 50,
+#'              max = 10, modification = "none")
+#' TimsonsIndex(germ.counts = y, intervals = int, partial = FALSE,
+#'              total.seeds = 50,
+#'              max = 10, modification = "labouriau")
+#' TimsonsIndex(germ.counts = y, intervals = int, partial = FALSE,
+#'              total.seeds = 50,
+#'              max = 10, modification = "khanungar")
+#' GermRateGeorge(germ.counts = y, intervals = int, partial = FALSE,
+#'                max = 10)
+#' GermRateGeorge(germ.counts = y, intervals = int, partial = FALSE,
+#'                max = 14)
 
 #' @rdname TimsonsIndex
 #' @export
@@ -192,8 +209,9 @@ TimsonsIndex <- function(germ.counts, intervals, partial = TRUE,
   }
 
   # Check if intervals are uniform
-  if (length(unique(diff(intervals))) != 1) {
-    stop("'intervals' are not uniform.")
+  idiff <- diff(intervals)
+  if (!all(abs(idiff - idiff[[1]]) < .Machine$double.eps ^ 0.5)) {
+    warning("'intervals' are not uniform.")
   }
 
   # Check if germ.counts and intervals are of equal length
@@ -235,12 +253,14 @@ TimsonsIndex <- function(germ.counts, intervals, partial = TRUE,
   cgp <- cumsum(x)/total.seeds * 100
   pgp <- x/total.seeds * 100
 
-  interval <- unique(diff(intervals))
+  # interval <- unique(diff(intervals))
 
   #GI <- sum(cumsum(x))
 
   TI <- sum(cgp)
-  TI <- sum(pgp*(max - (intervals[1:maxgc] - interval)))
+  # TI <- sum(pgp*(max - (intervals[1:maxgc] - interval)))
+  TI <- sum(pgp*(length(intervals[1:maxgc]) -
+                   (seq_along(intervals[1:maxgc]) - 1)))
 
 
   if (modification == "labouriau") {
@@ -248,7 +268,7 @@ TimsonsIndex <- function(germ.counts, intervals, partial = TRUE,
   }
 
   if (modification == "khanungar") {
-    TI <- TI/length(intervals)
+    TI <- TI/max(intervals)
   }
 
   return(TI)
@@ -270,8 +290,9 @@ GermRateGeorge <- function(germ.counts, intervals, partial = TRUE, max) {
   }
 
   # Check if intervals are uniform
-  if (length(unique(diff(intervals))) != 1) {
-    stop("'intervals' are not uniform.")
+  idiff <- diff(intervals)
+  if (!all(abs(idiff - idiff[[1]]) < .Machine$double.eps ^ 0.5)) {
+    warning("'intervals' are not uniform.")
   }
 
   # Check if germ.counts and intervals are of equal length
@@ -307,8 +328,10 @@ GermRateGeorge <- function(germ.counts, intervals, partial = TRUE, max) {
   maxgc <- which(intervals == max)
   x <- germ.counts[1:maxgc]
 
-  GI <- sum(cumsum(x))
+  GR <- sum(cumsum(x))
+  GR <- sum(x*(length(intervals[1:maxgc]) -
+                 (seq_along(intervals[1:maxgc]) - 1)))
 
-  return(GI)
+  return(GR)
 }
 

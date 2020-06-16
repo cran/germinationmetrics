@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-18, ICAR-NBPGR.
+### Copyright (C) 2017-20, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,27 +18,24 @@
 #' Weighted germination percentage
 #'
 #' Compute the Weighted germination percentage
-#' \ifelse{html}{\out{<i>WGP</i>}}{\eqn{WGP}} or Weighted germination index
-#' \ifelse{html}{\out{<i>WGI</i>}}{\eqn{WGI}}
-#' \insertCite{reddy_effect_1978,reddy_effect_1985}{germinationmetrics}.
+#' \mjseqn{WGP} or Weighted germination index
+#' \mjseqn{WGI}
+#' \insertCite{reddy_effect_1978,reddy_effect_1985}{germinationmetrics}. \loadmathjax
 #'
 #'
 #' Weighted germination percentage was calculated by giving maximum weight to
 #' the seeds that germinate first and decreasing weight to the seeds that
 #' germinate subsequently. It is computed as follows
-#' \insertCite{reddy_effect_1978,reddy_effect_1985}{germinationmetrics}:
+#' \insertCite{reddy_effect_1978,reddy_effect_1985}{germinationmetrics}.
 #'
-#' \ifelse{html}{\out{<p style="text-align: center;"><em>WGP =   <big>[</big>
-#' <sup> [&sum;<sup>t</sup><sub style="line-height: 1.8; margin-left:
-#' -1ex;">i=1</sub> (t &minus; i + 1)N<sub>i</sub>]</sup> &frasl; <sub>t &times;
-#' N</sub> <big>]</big> &times; 100 </em></p>}}{\deqn{WGP =
-#' \frac{\sum_{i=1}^{t}(t-i+1)N_{i}}{t \times N} \times 100}}
+#' \mjsdeqn{WGP =
+#' \frac{\sum_{i=1}^{k}(k-i+1)N_{i}}{k \times N} \times 100}
 #'
-#' Where, \ifelse{html}{\out{<i>N<sub>i</sub></i>}}{\eqn{N_{i}}}  is the  number
+#' Where, \mjseqn{N_{i}}  is the  number
 #' of seeds that germinated in the time interval
-#' \ifelse{html}{\out{<i>i</i>}}{\eqn{i}} (not cumulative, but partial count),
-#' \ifelse{html}{\out{<i>N</i>}}{\eqn{N}} is the total number of seeds tested
-#' and \ifelse{html}{\out{<i>t</i>}}{\eqn{t}} is the  total number of time
+#' \mjseqn{i} (not cumulative, but partial count),
+#' \mjseqn{N} is the total number of seeds tested,
+#' and \mjseqn{k} is the  total number of time
 #' intervals.
 #'
 #' @inheritParams MeanGermTime
@@ -84,8 +81,9 @@ WeightGermPercent <- function(germ.counts, total.seeds, intervals,
   }
 
   # Check if intervals are uniform
-  if (length(unique(diff(intervals))) != 1) {
-    stop("'intervals' are not uniform.")
+  idiff <- diff(intervals)
+  if (!all(abs(idiff - idiff[[1]]) < .Machine$double.eps ^ 0.5)) {
+    warning("'intervals' are not uniform.")
   }
 
   # Check if germ.counts and intervals are of equal length

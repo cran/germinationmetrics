@@ -6,14 +6,29 @@
 \alias{GermSpeedCorrected}
 \title{Speed of germination}
 \usage{
-GermSpeed(germ.counts, intervals, partial = TRUE, percent = FALSE,
-  total.seeds = NULL)
+GermSpeed(
+  germ.counts,
+  intervals,
+  partial = TRUE,
+  percent = FALSE,
+  total.seeds = NULL
+)
 
-GermSpeedAccumulated(germ.counts, intervals, partial = TRUE,
-  percent = FALSE, total.seeds = NULL)
+GermSpeedAccumulated(
+  germ.counts,
+  intervals,
+  partial = TRUE,
+  percent = FALSE,
+  total.seeds = NULL
+)
 
-GermSpeedCorrected(germ.counts, intervals, partial = TRUE, total.seeds,
-  method = c("normal", "accumulated"))
+GermSpeedCorrected(
+  germ.counts,
+  intervals,
+  partial = TRUE,
+  total.seeds,
+  method = c("normal", "accumulated")
+)
 }
 \arguments{
 \item{germ.counts}{Germination counts at each time interval. Can be partial
@@ -25,8 +40,8 @@ or cumulative as specified in the argument \code{partial}.}
 partial and if \code{FALSE}, it is considered as cumulative. Default is
 \code{TRUE}.}
 
-\item{percent}{logical. If \code{TRUE}, germination percentage is used instead of
-counts for computation. Default is \code{FALSE}.}
+\item{percent}{logical. If \code{TRUE}, germination percentage is used
+instead of counts for computation. Default is \code{FALSE}.}
 
 \item{total.seeds}{Total number of seeds. Mandatory for computation when
 \code{percent = TRUE}.}
@@ -37,75 +52,79 @@ counts for computation. Default is \code{FALSE}.}
 }
 \value{
 For \code{GermSpeed}, the value of germination speed as \%
-  \ifelse{html}{\out{time<sup>-1</sup>}}{\eqn{\mathrm{time^{-1}}}}.
+  \mjseqn{\mathrm{time^{-1}}}.
 
   For \code{GermSpeedAccumulated}, the value of accumulated germination speed
-  as \% \ifelse{html}{\out{time<sup>-1</sup>}}{\eqn{\mathrm{time^{-1}}}}.
+  as \% \mjseqn{\mathrm{time^{-1}}}.
 
   For \code{GermSpeedCorrected}, the corrected speed of germination.
 }
 \description{
 Compute the following metrics: \describe{ \item{\code{GermSpeed}}{Speed of
 germination or Germination rate index or Index of velocity of germination or
-Germination index or Emergence Rate Index
-\insertCite{throneberry_relation_1955,maguire_speed_1962,allan_seedling_1962,kendrick_photocontrol_1969,bouton_germination_1976,aosa_seed_1983,khandakar_jute_1983,bradbeer_seed_1988,wardle_allelopathic_1991}{germinationmetrics}.
+Germination index or Emergence rate index
+\insertCite{throneberry_relation_1955,maguire_speed_1962,allan_seedling_1962,kendrick_photocontrol_1969,bouton_germination_1976,erbachTillageContinuousCorn1982,aosa_seed_1983,khandakar_jute_1983,hsuPlantingDateEffects1986,bradbeer_seed_1988,wardle_allelopathic_1991}{germinationmetrics}.
 } \item{\code{GermSpeedAccumulated}}{Speed of accumulated germination
 \insertCite{bradbeer_seed_1988,wardle_allelopathic_1991,haugland_experiments_1996,de_santana_alise_2004}{germinationmetrics}.
 } \item{\code{GermSpeedCorrected}}{Corrected speed of germination or
 Corrected germination rate index
-\insertCite{evetts_germination_1972}{germinationmetrics}.} }
+\insertCite{evetts_germination_1972}{germinationmetrics}.} } \loadmathjax
 }
 \details{
 \code{GermSpeed} computes the speed of germination according to the following
 formula
-\insertCite{throneberry_relation_1955,maguire_speed_1962,allan_seedling_1962,kendrick_photocontrol_1969,bouton_germination_1976,aosa_seed_1983,khandakar_jute_1983,bradbeer_seed_1988,wardle_allelopathic_1991}{germinationmetrics}.
+\insertCite{throneberry_relation_1955,maguire_speed_1962,allan_seedling_1962,kendrick_photocontrol_1969,bouton_germination_1976,erbachTillageContinuousCorn1982,aosa_seed_1983,khandakar_jute_1983,hsuPlantingDateEffects1986,bradbeer_seed_1988,wardle_allelopathic_1991}{germinationmetrics}.
 
-\ifelse{html}{\out{<p style="text-align: center;"><i>S =
-<sup>N<sub>1</sub></sup>&frasl;<sub>T<sub>1</sub></sub>+<sup>N<sub>2</sub></sup>&frasl;<sub>T<sub>2</sub></sub>+<sup>N<sub>3</sub></sup>&frasl;<sub>T<sub>3</sub></sub>+
-&hellip;+<sup>N<sub>n</sub></sup>&frasl;<sub>T<sub>n</sub></sub></i></p>}}{\deqn{S
-= \frac{N_{1}}{T_{1}} + \frac{N_{2}}{T_{2}} + \frac{N_{3}}{T_{3}} + \cdots +
-\frac{N_{n}}{T_{n}}}}
+\mjsdeqn{S = \frac{N_{1}}{T_{1}} + \frac{N_{2}}{T_{2}} + \frac{N_{3}}{T_{3}}
++ \cdots + \frac{N_{k}}{T_{k}}}
 
-Where, \ifelse{html}{\out{N<sub>1</sub>}}{\eqn{N_{1}}},
-\ifelse{html}{\out{N<sub>2</sub>}}{\eqn{N_{2}}},
-\ifelse{html}{\out{N<sub>3</sub>}}{\eqn{N_{3}}},
-\ifelse{html}{\out{&hellip;}}{\eqn{\cdots}},
-\ifelse{html}{\out{N<sub>n</sub>}}{\eqn{N_{n}}} are the number of germinated
-seeds observed at time (days or hours)
-\ifelse{html}{\out{T<sub>1</sub>}}{\eqn{T_{1}}},
-\ifelse{html}{\out{T<sub>2</sub>}}{\eqn{T_{2}}},
-\ifelse{html}{\out{T<sub>3</sub>}}{\eqn{T_{3}}},
-\ifelse{html}{\out{&hellip;}}{\eqn{\cdots}},
-\ifelse{html}{\out{T<sub>n</sub>}}{\eqn{T_{n}}} after sowing. (Not
-accumulated/cumulative number, but the number of seeds that germinated at the
-specific time).
+Where, \mjseqn{N_{1}}, \mjseqn{N_{2}}, \mjseqn{N_{3}}, \mjseqn{\cdots},
+\mjseqn{N_{k}} are the number of germinated seeds observed at time (days or
+hours) \mjseqn{T_{1}}, \mjseqn{T_{2}}, \mjseqn{T_{3}}, \mjseqn{\cdots},
+\mjseqn{T_{k}} after sowing (Not accumulated/cumulative number, but the
+number of seeds that germinated at the specific time) and \mjseqn{k} is the
+total number of time intervals.
+
+It is the same as Emergence Rate Index (\mjseqn{ERI}) described by
+\insertCite{allan_seedling_1962;textual}{germinationmetrics},
+\insertCite{erbachTillageContinuousCorn1982;textual}{germinationmetrics} and
+\insertCite{hsuPlantingDateEffects1986;textual}{germinationmetrics} as well
+as Germination Index (\mjseqn{GI}) according to
+\insertCite{aosa_seed_1983;textual}{germinationmetrics}.
+
+The formula can also be described as follows.
+
+\mjsdeqn{S = \sum_{i=1}^{k}\frac{N_{i}}{T_{i}}}
+
+Where, \mjseqn{T_{i}} is the time from the start of the experiment to the
+\mjseqn{i}th interval, \mjseqn{N_{i}} is the number of seeds germinated in
+the \mjseqn{i}th time interval (not the accumulated number, but the number
+corresponding to the \mjseqn{i}th interval), and \mjseqn{k} is the total
+number of time intervals.
 
 \code{GermSpeedAccumulated} computes the speed of accumulated germination as
 follows
 \insertCite{bradbeer_seed_1988,wardle_allelopathic_1991,haugland_experiments_1996,de_santana_alise_2004}{germinationmetrics}.
 
-\ifelse{html}{\out{<p style="text-align: center;"><i>S =
-<sup>N<sub>1</sub></sup>&frasl;<sub>T<sub>1</sub></sub> +
-<sup>[N<sub>1</sub>+N<sub>2</sub>]</sup>&frasl;<sub>T<sub>2</sub></sub> +
-<sup>[N<sub>1</sub>+N<sub>2</sub>+N<sub>3</sub>]</sup>&frasl;<sub>T<sub>3</sub></sub>
-+ &hellip;+ <sup>[N<sub>1</sub>+N<sub>2</sub>+
-&hellip;+N<sub>n</sub>]</sup>&frasl;<sub>T<sub>n</sub></sub></i></p>}}{\deqn{S_{accumulated}
-= \frac{N_{1}}{T_{1}} + \frac{N_{1} + N_{2}}{T_{2}} + \frac{N_{1} + N_{2} +
-N_{3}}{T_{3}} + \cdots +\frac{N_{1} + N_{2} + \cdots + N_{n}}{T_{n}}}}
+\mjsdeqn{S_{accumulated} = \frac{N_{1}}{T_{1}} + \frac{N_{1} + N_{2}}{T_{2}}
++ \frac{N_{1} + N_{2} + N_{3}}{T_{3}} + \cdots +\frac{N_{1} + N_{2} + \cdots
++ N_{k}}{T_{k}}}
 
-Where, \ifelse{html}{\out{N<sub>1</sub>}}{\eqn{N_{1}}},
-\ifelse{html}{\out{N<sub>2</sub>}}{\eqn{N_{2}}},
-\ifelse{html}{\out{N<sub>3</sub>}}{\eqn{N_{3}}},
-\ifelse{html}{\out{&hellip;}}{\eqn{\cdots}},
-\ifelse{html}{\out{N<sub>n</sub>}}{\eqn{N_{n}}} are the number of germinated
-seeds observed at time (days or hours)
-\ifelse{html}{\out{T<sub>1</sub>}}{\eqn{T_{1}}},
-\ifelse{html}{\out{T<sub>2</sub>}}{\eqn{T_{2}}},
-\ifelse{html}{\out{T<sub>3</sub>}}{\eqn{T_{3}}},
-\ifelse{html}{\out{&hellip;}}{\eqn{\cdots}},
-\ifelse{html}{\out{T<sub>n</sub>}}{\eqn{T_{n}}} after sowing. (Not
-accumulated/cumulative number, but the number of seeds that germinated at the
-specific time).
+Where, \mjseqn{N_{1}}, \mjseqn{N_{2}}, \mjseqn{N_{3}}, \mjseqn{\cdots},
+\mjseqn{N_{k}} are the number of germinated seeds observed at time (days or
+hours) \mjseqn{T_{1}}, \mjseqn{T_{2}}, \mjseqn{T_{3}}, \mjseqn{\cdots},
+\mjseqn{T_{k}} after sowing (Not accumulated/cumulative number, but the
+number of seeds that germinated at the specific time), and \mjseqn{k} is the
+total number of time intervals.
+
+The formula can also be described as follows.
+
+\mjsdeqn{S_{accumulated} = \sum_{i=1}^{k}\frac{\sum_{j=1}^{i}N_{j}}{T_{i}}}
+
+Where, \mjseqn{T_{i}} is the time from the start of the experiment to the
+\mjseqn{i}th interval, \mjseqn{\sum_{j=1}^{i}N_{j}} is the
+cumuative/accumulated number of seeds germinated in the \mjseqn{i}th time
+interval, and \mjseqn{k} is the total number of time intervals.
 
 Speed of germination expresses the rate of germination in terms of the total
 number of seeds that germinate in a time interval. Higher values indicate
@@ -117,12 +136,9 @@ percentages instead of counts for computing speed.
 \code{GermSpeedCorrected} computes the corrected speed of germination as
 follows \insertCite{evetts_germination_1972}{germinationmetrics}.
 
-\ifelse{html}{\out{<p style="text-align: center;"><i>S<sub>corrected</sub> =
-<sup>S</sup>&frasl;<sub>FGP</sub></i><p>}}{\deqn{S_{corrected} =
-\frac{S}{FGP} }}
+\mjsdeqn{S_{corrected} = \frac{S}{FGP}}
 
-Where, \ifelse{html}{\out{<i>FGP</i>}}{\eqn{FGP}} is the final germination
-percentage or germinability.
+Where, \mjseqn{FGP} is the final germination percentage or germinability.
 
 With \code{percent = TRUE}, germination percentage is used instead of counts
 for computation in \code{GermSpeed} and \code{GermSpeedAccumulated}.

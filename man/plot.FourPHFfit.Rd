@@ -5,9 +5,18 @@
 \title{Plot the four-parameter hill function fitted cumulative germination curve
 from a \code{FourPHFfit} object}
 \usage{
-\method{plot}{FourPHFfit}(x, rog = TRUE, t50.total = TRUE,
-  t50.germ = TRUE, tmgr = TRUE, mgt = TRUE, uniformity = TRUE,
-  limits = TRUE, plotlabels = TRUE, ...)
+\method{plot}{FourPHFfit}(
+  x,
+  rog = TRUE,
+  t50.total = TRUE,
+  t50.germ = TRUE,
+  tmgr = TRUE,
+  mgt = TRUE,
+  uniformity = TRUE,
+  limits = TRUE,
+  plotlabels = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{FourPHFfit} obtained as output from the
@@ -17,12 +26,13 @@ from a \code{FourPHFfit} object}
 is \code{TRUE}.}
 
 \item{t50.total}{If \code{TRUE}, highlights the time required for 50\% of
-total seeds to germinate (\ifelse{html}{\out{t<sub>50<sub>Total</sub></sub>}}{\eqn{\textrm{t}_{\textrm{50}_\textrm{Germ}}}}) as a vertical line. Default is \code{TRUE}.}
+total seeds to germinate (\mjseqn{\textrm{t}_{\textrm{50}_\textrm{Germ}}})
+as a vertical line. Default is \code{TRUE}.}
 
 \item{t50.germ}{If \code{TRUE}, highlights the time required for 50\% of
 viable/germinated seeds to germinate
-(\ifelse{html}{\out{t<sub>50<sub>Germ</sub></sub>}}{\eqn{\textrm{t}_{\textrm{50}_\textrm{Total}}}}) as a
-vertical line. Default is \code{TRUE}.}
+(\mjseqn{\textrm{t}_{\textrm{50}_\textrm{Total}}}) as a vertical line.
+Default is \code{TRUE}.}
 
 \item{tmgr}{If \code{TRUE}, highlights the Time at Maximum Germination Rate
 (TMGR) as a vertical line. Default is \code{TRUE}.}
@@ -31,8 +41,8 @@ vertical line. Default is \code{TRUE}.}
 vertical line. Default is \code{TRUE}.}
 
 \item{uniformity}{If \code{TRUE}, highlights the uniformity value
-(\ifelse{html}{\out{U<sub>t<sub>max</sub>&minus;t<sub>min</sub></sub>}}{\eqn{\textrm{U}_{\textrm{t}_{\textrm{max}}-\textrm{t}_{\textrm{min}}}}})
- as a horizontal line. Default is \code{TRUE}.}
+(\mjseqn{\textrm{U}_{\textrm{t}_{\textrm{max}}-\textrm{t}_{\textrm{min}}}})
+as a horizontal line. Default is \code{TRUE}.}
 
 \item{limits}{logical. If \code{TRUE}, set the limits of y axis (germination
 percentage) between 0 and 100 in the germination curve plot. If
@@ -52,10 +62,11 @@ The plot of the cumulative germination curve as an object of class
 cumulative germination curve (FPHF curve) from a \code{FourPHFfit} object as
 an object of class \code{ggplot}. Further, the rate of germination curve (RoG
 curve) is plotted and different parameters annotated as specified in the
-different arguments.
+different arguments. \loadmathjax
 }
 \examples{
 
+\donttest{
 x <- c(0, 0, 0, 0, 4, 17, 10, 7, 1, 0, 1, 0, 0, 0)
 y <- c(0, 0, 0, 0, 4, 21, 31, 38, 39, 39, 40, 40, 40, 40)
 int <- 1:length(x)
@@ -88,6 +99,7 @@ plot(fit2, rog = FALSE, t50.total = FALSE, t50.germ = FALSE,
 # Without y axis limits adjustment
 plot(fit1, limits = FALSE)
 plot(fit2, limits = FALSE)
+}
 
 }
 \seealso{
