@@ -8,7 +8,6 @@ header-includes:
 - \usepackage{wrapfig}
 - \pagestyle{fancy}
 - \fancyhead[LE,RO]{\slshape \rightmark}
-- \fancyhead[LO,RE]{The \texttt{germinationmetrics} Package{:} A Brief Introduction}
 - \fancyfoot[C]{\thepage}
 - \usepackage{xcolor}
 - \usepackage{hyperref}
@@ -19,9 +18,9 @@ header-includes:
 - \usepackage{booktabs}
 - \newcommand{\blandscape}{\begin{landscape}}
 - \newcommand{\elandscape}{\end{landscape}}
+- \fancyhead[LO,RE]{The \texttt{germinationmetrics} Package{:} A Brief Introduction}
 output:
   pdf_document:
-    dev: cairo_pdf
     fig_caption: no
     toc: no
   html_document:
@@ -47,6 +46,10 @@ options(repos = r)
 
 # Workaround for missing pandoc in CRAN OSX build machines
 out_type <- ifelse(out_type == "", "latex", out_type)
+
+# Workaround for missing pandoc in Solaris build machines
+out_type <- ifelse(identical (out_type, vector(mode = "logical", length = 0)),
+                   "latex", out_type)
 ```
 
 ```{r, results='asis', echo=FALSE}
@@ -112,9 +115,10 @@ library(germinationmetrics)
 ## Version History
 ```{r, results='asis', echo=FALSE}
 # Fetch release version
-rver <- ifelse(test = gsub("(.\\.)(\\d+)(\\..)", "", getNamespaceVersion("germinationmetrics")) == "",
-               yes = getNamespaceVersion("germinationmetrics"),
-               no = as.vector(available.packages()["germinationmetrics",]["Version"]))
+# rver <- ifelse(test = gsub("(.\\.)(\\d+)(\\..)", "", getNamespaceVersion("germinationmetrics")) == "",
+#                yes = getNamespaceVersion("germinationmetrics"),
+#                no = as.vector(available.packages()["germinationmetrics",]["Version"]))
+rver <- "0.1.5"
 ```
 The current version of the package is `r rver`. The previous versions are as follows.
 
@@ -240,6 +244,10 @@ getCode <- function(myFunction, myPackage) {
   maxn <- grep(pattern = "### ** Examples", x = out, fixed = TRUE)
   out <- out[-(1:maxn)]
   
+  out <- out[!(out %in% c("## No test: ", "## End(No test)"))]
+  
+  out <- gsub("^##D ", "", out)
+  
   return(out)
 }
 library(germinationmetrics)
@@ -347,16 +355,56 @@ getCode <- function(myFunction, myPackage) {
   maxn <- grep(pattern = "### ** Examples", x = out, fixed = TRUE)
   out <- out[-(1:maxn)]
   
+  out <- out[!(out %in% c("## No test: ", "## End(No test)"))]
+  
+  out <- gsub("^##D ", "", out)
+  
   return(out)
 }
-library("germinationmetrics")
+library(germinationmetrics)
+require(germinationmetrics)
 ```
 
 #### `FourPHFfit()`
 ```{r, runCode, code = getCode("FourPHFfit", "germinationmetrics")}
 ```
 
-```{r, runCode, fig.width = 6, fig.height = 4, code = getCode("plot.FourPHFfit", "germinationmetrics")}
+```{r, runCode, fig.width = 6, fig.height = 4, code = getCode("plot.FourPHFfit", "germinationmetrics"), eval =FALSE, echo = FALSE}
+```
+
+```{r, fig.width = 6, fig.height = 4, code = getCode("plot.FourPHFfit", "germinationmetrics")}
+x <- c(0, 0, 0, 0, 4, 17, 10, 7, 1, 0, 1, 0, 0, 0)
+y <- c(0, 0, 0, 0, 4, 21, 31, 38, 39, 39, 40, 40, 40, 40)
+int <- 1:length(x)
+total.seeds = 50
+
+# From partial germination counts
+#----------------------------------------------------------------------------
+fit1 <- FourPHFfit(germ.counts = x, intervals = int,
+                   total.seeds = 50, tmax = 20)
+
+# From cumulative germination counts
+#----------------------------------------------------------------------------
+fit2 <- FourPHFfit(germ.counts = y, intervals = int,
+                   total.seeds = 50, tmax = 20, partial = FALSE)
+
+# Default plots
+plot(fit1)
+plot(fit2)
+
+# No labels
+plot(fit1, plotlabels = FALSE)
+plot(fit2, plotlabels = FALSE)
+
+# Only the FPHF curve
+plot(fit1, rog = FALSE, t50.total = FALSE, t50.germ = FALSE,
+     tmgr = FALSE, mgt = FALSE, uniformity = FALSE)
+plot(fit2, rog = FALSE, t50.total = FALSE, t50.germ = FALSE,
+     tmgr = FALSE, mgt = FALSE, uniformity = FALSE)
+
+# Without y axis limits adjustment
+plot(fit1, limits = FALSE)
+plot(fit2, limits = FALSE)
 ```
 
 ## Wrapper functions
@@ -373,6 +421,11 @@ This wrapper function can be used to compute several germination indices simulta
 This wrapper function can be used to fit the four-parameter hill function for multiple samples in batch.
 
 ```{r, runCode, code = getCode("FourPHFfit.bulk", "germinationmetrics")}
+```
+
+Multiple fitted curves generated in batch can also be plotted.
+
+```{r, runCode, fig.width = 6, fig.height = 4, code = getCode("plot.FourPHFfit.bulk", "germinationmetrics")}
 ```
 
 ## Citing `germinationmetrics`
