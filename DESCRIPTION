@@ -1,6 +1,6 @@
 Package: germinationmetrics
 Title: Seed Germination Indices and Curve Fitting
-Version: 0.1.5
+Version: 0.1.6
 Authors@R: c(
     person(given = "J.", family = "Aravind",
            email = "j.aravind@icar.gov.in",
@@ -30,13 +30,13 @@ Description: Provides functions to compute various germination indices such as
     four-parameter hill function and computation of associated parameters. See
     the vignette for more, including full list of citations for the methods
     implemented.
-Copyright: 2017-2018, ICAR-NBPGR
+Copyright: 2017-2022, ICAR-NBPGR
 License: GPL-2 | GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.5.0)
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.0
 Imports: broom, data.table, ggplot2, ggrepel, mathjaxr, minpack.lm,
         plyr, Rdpack, utils, stats
 Suggests: knitr, rmarkdown, reshape2, pander, XML, httr, RCurl
@@ -47,7 +47,7 @@ URL: https://github.com/aravind-j/germinationmetrics,
         https://doi.org/10.5281/zenodo.1219630
 BugReports: https://github.com/aravind-j/germinationmetrics/issues
 NeedsCompilation: no
-Packaged: 2021-02-12 18:47:35 UTC; J. Aravind
+Packaged: 2022-06-15 09:31:42 UTC; J. Aravind
 Author: J. Aravind [aut, cre] (<https://orcid.org/0000-0002-4791-442X>),
   S. Vimala Devi [aut],
   J. Radhamani [aut],
@@ -56,4 +56,4 @@ Author: J. Aravind [aut, cre] (<https://orcid.org/0000-0002-4791-442X>),
   ICAR-NBGPR [cph] (www.nbpgr.ernet.in)
 Maintainer: J. Aravind <j.aravind@icar.gov.in>
 Repository: CRAN
-Date/Publication: 2021-02-17 09:00:24 UTC
+Date/Publication: 2022-06-15 16:00:02 UTC

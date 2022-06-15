@@ -40,7 +40,7 @@ test is considered. Default is \code{TRUE}.}
 }
 \value{
 A list with the following components:  \item{Germination Value}{The
-  germination value} \item{Calculations}{The data frame of calculations.}
+  germination value.} \item{Calculations}{The data frame of calculations.}
   \item{testend}{The end of test value (Only for method \code{dp}).}
 }
 \description{
@@ -72,7 +72,8 @@ at which the rate of germination starts to decrease. It is also described as
 Emergence energy \insertCite{bonner_ideal_1967}{germinationmetrics}.
 
 For daily germination counts, germination value (\mjseqn{GV}) is computed as
-follows \insertCite{czabator_germination_1962}{germinationmetrics}.
+follows \insertCite{czabator_germination_1962}{germinationmetrics} (Specified
+by the argument \code{method = "czabator"}).
 
 \mjsdeqn{GV = PV \times MDG}
 
@@ -85,7 +86,7 @@ germination percentage per unit time (\mjseqn{\overline{GP}}).
 
 A new estimation of germination value was given by
 \insertCite{djavanshir_germination_1976;textual}{germinationmetrics} as
-follows.
+follows (Specified by the argument \code{method = "dp"}).
 
 \mjsdeqn{GV = \frac{\sum DGS}{N} \times GP \times c}
 

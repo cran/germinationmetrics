@@ -47,7 +47,7 @@ For \code{MeanGermRate}, the mean germination rate value as
   \mjseqn{\mathrm{time^{-1}}}.
 
   For \code{CVG}, the value of Coefficient of of velocity/rate of germination
-  or Kotowski's coefficient of velocity.
+  or Kotowski's coefficient of velocity as \% \mjseqn{\mathrm{time^{-1}}}.
 
   For \code{GermRateRecip}, the value of germination rate as
   \mjseqn{\mathrm{time^{-1}}}.
@@ -121,12 +121,14 @@ the \mjseqn{i}th time interval (not the accumulated number, but the number
 corresponding to the \mjseqn{i}th interval), and \mjseqn{k} is the total
 number of time intervals.
 
-\code{GermRateRecip} computes the germination rate \mjseqn{v_{50}}) as the
+\code{GermRateRecip} computes the germination rate (\mjseqn{v_{50}}) as the
 reciprocal of the median germination time (\mjseqn{t_{50}})
 \insertCite{went_experimental_1957,labouriau_uma_1983,ranal_how_2006}{germinationmetrics}
-computed according to the methods of
-\insertCite{coolbear_effect_1984;textual}{germinationmetrics} or
-\insertCite{farooq_thermal_2005;textual}{germinationmetrics} as follows.
+according to the methods of
+\insertCite{coolbear_effect_1984;textual}{germinationmetrics} (Specified by
+the argument \code{method = "coolbear"}) or
+\insertCite{farooq_thermal_2005;textual}{germinationmetrics} (Specified by
+the argument \code{method = "farooq"}) as follows.
 
 \mjsdeqn{v_{50} = \frac{1}{t_{50}}}
 }

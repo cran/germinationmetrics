@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-20, ICAR-NBPGR.
+### Copyright (C) 2017-2022, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -48,8 +48,9 @@
 #' @inheritParams GermPercent
 #' @inheritParams MeanGermTime
 #'
-#' @return The value of mean germination percentage or mean number of seeds per
-#'   time interval.
+#' @return The value of mean germination percentage as \%
+#'   \mjseqn{\mathrm{time^{-1}}} or mean number of seeds per time interval as
+#'   \mjseqn{\mathrm{count \, time^{-1}}}.
 #'
 #' @references
 #'

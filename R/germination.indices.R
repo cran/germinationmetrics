@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-20, ICAR-NBPGR.
+### Copyright (C) 2017-2022, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,6 +37,10 @@
 #' @param partial logical. If \code{TRUE}, germination counts in
 #'   \code{counts.intervals.cols} is considered as partial and if \code{FALSE},
 #'   it is considered as cumulative. Default is \code{TRUE}.
+#' @param PeakGermPercent logical. If \code{TRUE}, then the Peak germination
+#'   percentage
+#'   \insertCite{vallance_studies_1950,roh_maturity_2004}{germinationmetrics} is
+#'   computed. Default is \code{TRUE}.
 #' @param FirstGermTime logical. If \code{TRUE}, the Time of first germination
 #'   or Germination time lag (\mjseqn{t_{0}})
 #'   \insertCite{edwards_temperature_1932,czabator_germination_1962,goloff_germination_1975,labouriau_germinacao_1983,ranal_effects_1999,quintanilla_effect_2000}{germinationmetrics}
@@ -148,6 +152,7 @@
 #'    and
 #'   \insertCite{fakoredeHeteroticEffectsAssociation1983;textual}{germinationmetrics}.}
 #'
+#'
 #' @param PeakValue logical. If \code{TRUE}, the Peak value (\mjseqn{PV}) or
 #'   Emergence Energy (\mjseqn{EE})
 #'   \insertCite{czabator_germination_1962,bonner_ideal_1967}{germinationmetrics}
@@ -196,7 +201,8 @@
 #' @seealso This function is a wrapper around the different functions for
 #'   computation of single-value germination indices in
 #'   \href{https://cran.r-project.org/package=germinationmetrics}{germinationmetrics}
-#'    (\code{\link[germinationmetrics]{FirstGermTime}},
+#'    (\code{\link[germinationmetrics]{PeakGermPercent}},
+#'   \code{\link[germinationmetrics]{FirstGermTime}},
 #'   \code{\link[germinationmetrics:FirstGermTime]{LastGermTime}},
 #'   \code{\link[germinationmetrics:FirstGermTime]{PeakGermTime}},
 #'   \code{\link[germinationmetrics:FirstGermTime]{TimeSpreadGerm}},
@@ -230,6 +236,7 @@
 #' @export
 germination.indices <- function(data, total.seeds.col, counts.intervals.cols,
                                 intervals, partial = TRUE,
+                                PeakGermPercent = TRUE,
                                 FirstGermTime = TRUE, LastGermTime = TRUE,
                                 PeakGermTime = TRUE, TimeSpreadGerm = TRUE,
                                 t50 = TRUE, MeanGermTime = TRUE,
@@ -351,6 +358,13 @@ germination.indices <- function(data, total.seeds.col, counts.intervals.cols,
   data[, GermPercent := GermPercent(germ.counts = unlist(mget(counts.intervals.cols)),
                                     total.seeds = unlist(mget(total.seeds.col)),
                                     partial = TRUE), by = 1:nrow(data)]
+
+  if (PeakGermPercent) {
+    data[, PeakGermPercent := PeakGermPercent(germ.counts = unlist(mget(counts.intervals.cols)),
+                                              intervals = intervals,
+                                              total.seeds = unlist(mget(total.seeds.col)),
+                                              partial = TRUE), by = 1:nrow(data)]
+  }
 
   if (FirstGermTime) {
     data[, FirstGermTime := FirstGermTime(germ.counts = unlist(mget(counts.intervals.cols)),
@@ -569,28 +583,28 @@ germination.indices <- function(data, total.seeds.col, counts.intervals.cols,
   }
 
   if (EmergenceRateIndex) {
-    data[, EmergenceRateIndex_Melville := EmergenceRateIndex(germ.counts = unlist(mget(counts.intervals.cols)),
-                                  intervals = intervals, partial = TRUE,
-                                  total.seeds = unlist(mget(total.seeds.col)),
-                                  method = "melville"),
+    data[, EmergenceRateIndex_SG := EmergenceRateIndex(germ.counts = unlist(mget(counts.intervals.cols)),
+                                                       intervals = intervals, partial = TRUE,
+                                                       total.seeds = unlist(mget(total.seeds.col)),
+                                                       method = "shmueligoldberg"),
          by = 1:nrow(data)]
 
-    data[, EmergenceRateIndex_Melville_mod := EmergenceRateIndex(germ.counts = unlist(mget(counts.intervals.cols)),
-                                                    intervals = intervals, partial = TRUE,
-                                                    total.seeds = unlist(mget(total.seeds.col)),
-                                                    method = "melvillesantanaranal"),
+    data[, EmergenceRateIndex_SG_mod := EmergenceRateIndex(germ.counts = unlist(mget(counts.intervals.cols)),
+                                                           intervals = intervals, partial = TRUE,
+                                                           total.seeds = unlist(mget(total.seeds.col)),
+                                                           method = "sgsantanaranal"),
          by = 1:nrow(data)]
 
     data[, EmergenceRateIndex_BilbroWanjura := EmergenceRateIndex(germ.counts = unlist(mget(counts.intervals.cols)),
-                                                    intervals = intervals, partial = TRUE,
-                                                    total.seeds = unlist(mget(total.seeds.col)),
-                                                    method = "bilbrowanjura"),
+                                                                  intervals = intervals, partial = TRUE,
+                                                                  total.seeds = unlist(mget(total.seeds.col)),
+                                                                  method = "bilbrowanjura"),
          by = 1:nrow(data)]
 
     data[, EmergenceRateIndex_Fakorede := EmergenceRateIndex(germ.counts = unlist(mget(counts.intervals.cols)),
-                                                    intervals = intervals, partial = TRUE,
-                                                    total.seeds = unlist(mget(total.seeds.col)),
-                                                    method = "fakorede"),
+                                                             intervals = intervals, partial = TRUE,
+                                                             total.seeds = unlist(mget(total.seeds.col)),
+                                                             method = "fakorede"),
          by = 1:nrow(data)]
 
   }

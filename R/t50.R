@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-20, ICAR-NBPGR.
+### Copyright (C) 2017-2022, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -111,6 +111,9 @@ t50 <- function(germ.counts, intervals, partial = TRUE,
 
   x <- germ.counts
   csx <- cumsum(x)
+
+  # Check method
+  method <- match.arg(method)
 
   if (method == "coolbear") {
     xhalf <- (sum(x) + 1)/2

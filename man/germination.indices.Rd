@@ -10,6 +10,7 @@ germination.indices(
   counts.intervals.cols,
   intervals,
   partial = TRUE,
+  PeakGermPercent = TRUE,
   FirstGermTime = TRUE,
   LastGermTime = TRUE,
   PeakGermTime = TRUE,
@@ -64,6 +65,11 @@ columns specified in argument \code{counts.intervals.cols})  were recorded.}
 \item{partial}{logical. If \code{TRUE}, germination counts in
 \code{counts.intervals.cols} is considered as partial and if \code{FALSE},
 it is considered as cumulative. Default is \code{TRUE}.}
+
+\item{PeakGermPercent}{logical. If \code{TRUE}, then the Peak germination
+percentage
+\insertCite{vallance_studies_1950,roh_maturity_2004}{germinationmetrics} is
+computed. Default is \code{TRUE}.}
 
 \item{FirstGermTime}{logical. If \code{TRUE}, the Time of first germination
 or Germination time lag (\mjseqn{t_{0}})
@@ -259,7 +265,8 @@ germination.indices(gcdata, total.seeds.col = "Total Seeds",
 This function is a wrapper around the different functions for
   computation of single-value germination indices in
   \href{https://cran.r-project.org/package=germinationmetrics}{germinationmetrics}
-   (\code{\link[germinationmetrics]{FirstGermTime}},
+   (\code{\link[germinationmetrics]{PeakGermPercent}},
+  \code{\link[germinationmetrics]{FirstGermTime}},
   \code{\link[germinationmetrics:FirstGermTime]{LastGermTime}},
   \code{\link[germinationmetrics:FirstGermTime]{PeakGermTime}},
   \code{\link[germinationmetrics:FirstGermTime]{TimeSpreadGerm}},

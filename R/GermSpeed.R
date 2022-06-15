@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-20, ICAR-NBPGR.
+### Copyright (C) 2017-2022, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #' Compute the following metrics: \describe{ \item{\code{GermSpeed}}{Speed of
 #' germination or Germination rate index or Index of velocity of germination or
 #' Germination index or Emergence rate index
-#' \insertCite{throneberry_relation_1955,maguire_speed_1962,allan_seedling_1962,kendrick_photocontrol_1969,bouton_germination_1976,erbachTillageContinuousCorn1982,aosa_seed_1983,khandakar_jute_1983,hsuPlantingDateEffects1986,bradbeer_seed_1988,wardle_allelopathic_1991}{germinationmetrics}.
+#' \insertCite{throneberry_relation_1955,maguire_speed_1962,allan_seedling_1962,kendrick_photocontrol_1969,bouton_germination_1976,erbachTillageContinuousCorn1982,aosa_seed_1983,khandakar_jute_1983,hsu_planting_1986,bradbeer_seed_1988,wardle_allelopathic_1991}{germinationmetrics}.
 #' } \item{\code{GermSpeedAccumulated}}{Speed of accumulated germination
 #' \insertCite{bradbeer_seed_1988,wardle_allelopathic_1991,haugland_experiments_1996,de_santana_alise_2004}{germinationmetrics}.
 #' } \item{\code{GermSpeedCorrected}}{Corrected speed of germination or
@@ -29,7 +29,7 @@
 #'
 #' \code{GermSpeed} computes the speed of germination according to the following
 #' formula
-#' \insertCite{throneberry_relation_1955,maguire_speed_1962,allan_seedling_1962,kendrick_photocontrol_1969,bouton_germination_1976,erbachTillageContinuousCorn1982,aosa_seed_1983,khandakar_jute_1983,hsuPlantingDateEffects1986,bradbeer_seed_1988,wardle_allelopathic_1991}{germinationmetrics}.
+#' \insertCite{throneberry_relation_1955,maguire_speed_1962,allan_seedling_1962,kendrick_photocontrol_1969,bouton_germination_1976,erbachTillageContinuousCorn1982,aosa_seed_1983,khandakar_jute_1983,hsu_planting_1986,bradbeer_seed_1988,wardle_allelopathic_1991}{germinationmetrics}.
 #'
 #' \mjsdeqn{S = \frac{N_{1}}{T_{1}} + \frac{N_{2}}{T_{2}} + \frac{N_{3}}{T_{3}}
 #' + \cdots + \frac{N_{k}}{T_{k}}}
@@ -44,8 +44,8 @@
 #' It is the same as Emergence Rate Index (\mjseqn{ERI}) described by
 #' \insertCite{allan_seedling_1962;textual}{germinationmetrics},
 #' \insertCite{erbachTillageContinuousCorn1982;textual}{germinationmetrics} and
-#' \insertCite{hsuPlantingDateEffects1986;textual}{germinationmetrics} as well
-#' as Germination Index (\mjseqn{GI}) according to
+#' \insertCite{hsu_planting_1986;textual}{germinationmetrics} as well as
+#' Germination Index (\mjseqn{GI}) according to
 #' \insertCite{aosa_seed_1983;textual}{germinationmetrics}.
 #'
 #' The formula can also be described as follows.
@@ -94,10 +94,15 @@
 #'
 #' \mjsdeqn{S_{corrected} = \frac{S}{FGP}}
 #'
-#' Where, \mjseqn{FGP} is the final germination percentage or germinability.
+#' Where, \mjseqn{S} is the germination speed (either standard or accumulated as
+#' specified by the argument  \code{method = "normal"} or \code{method =
+#' "accumulated"} respectively) computed with germination percentage instead of
+#' counts and \mjseqn{FGP} is the final germination percentage or germinability.
 #'
 #' With \code{percent = TRUE}, germination percentage is used instead of counts
-#' for computation in \code{GermSpeed} and \code{GermSpeedAccumulated}.
+#' for computation in \code{GermSpeed} and \code{GermSpeedAccumulated}. In case
+#' of \code{GermSpeedCorrected}, germination percentage is always used for the
+#' numerator.
 #'
 #' @inheritParams MeanGermTime
 #' @param percent logical. If \code{TRUE}, germination percentage is used
@@ -108,13 +113,14 @@
 #'   \code{GermSpeedCorrected}. Either \code{"normal"} (\code{GermSpeed}) or
 #'   \code{"accumulated"} (\code{GermSpeedAccumulated}).
 #'
-#' @return For \code{GermSpeed}, the value of germination speed as \%
-#'   \mjseqn{\mathrm{time^{-1}}}.
+#' @return For \code{GermSpeed}, the value of germination speed as
+#'   \mjseqn{\mathrm{count \, time^{-1}}} or \% \mjseqn{\mathrm{time^{-1}}}.
 #'
 #'   For \code{GermSpeedAccumulated}, the value of accumulated germination speed
-#'   as \% \mjseqn{\mathrm{time^{-1}}}.
+#'   as \mjseqn{\mathrm{count \, time^{-1}}} or \% \mjseqn{\mathrm{time^{-1}}}.
 #'
-#'   For \code{GermSpeedCorrected}, the corrected speed of germination.
+#'   For \code{GermSpeedCorrected}, the corrected speed of germination as
+#'   \mjseqn{\mathrm{time^{-1}}}.
 #'
 #' @references
 #'
@@ -278,14 +284,17 @@ GermSpeedCorrected <- function(germ.counts, intervals, partial = TRUE,
     stop("'total.seeds' should be a numeric vector of length 1.")
   }
 
+  # Check method
   method <- match.arg(method)
 
   if (method == "normal") {
-    speed <- GermSpeed(germ.counts, intervals, partial)
+    speed <- GermSpeed(germ.counts, intervals, partial,
+                       total.seeds = total.seeds, percent = TRUE)
   }
 
   if (method == "accumulated") {
-    speed <- GermSpeedAccumulated(germ.counts, intervals, partial)
+    speed <- GermSpeedAccumulated(germ.counts, intervals, partial,
+                                  total.seeds = total.seeds, percent = TRUE)
   }
 
   gp <- GermPercent(germ.counts = germ.counts, total.seeds = total.seeds,

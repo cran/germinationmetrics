@@ -9,7 +9,7 @@ EmergenceRateIndex(
   intervals,
   partial = TRUE,
   total.seeds = NULL,
-  method = c("melville", "melvillesantanaranal", "bilbrowanjura", "fakorede")
+  method = c("shmueligoldberg", "sgsantanaranal", "bilbrowanjura", "fakorede")
 )
 }
 \arguments{
@@ -24,12 +24,18 @@ partial and if \code{FALSE}, it is considered as cumulative. Default is
 
 \item{total.seeds}{Total number of seeds.}
 
-\item{method}{The method to be used. Either \code{"melville"},
-\code{"melvillesantanaranal"}, \code{"bilbrowanjura"} or \code{"fakorede"}.
-Default is \code{"melville"} (see \strong{Details}).}
+\item{method}{The method to be used. Either \code{"shmueligoldberg"},
+\code{"sgsantanaranal"}, \code{"bilbrowanjura"} or \code{"fakorede"}.
+Default is \code{"shmueligoldberg"} (see \strong{Details}).}
 }
 \value{
-The value of the Emergence rate index.
+The value of the Emergence rate index with the units according to
+  \code{method} as follows.
+
+  \item{\code{shmueligoldberg}}{\mjseqn{\mathrm{count}}}
+  \item{\code{sgsantanaranal}}{\mjseqn{\mathrm{no \, unit}}}
+  \item{\code{bilbrowanjura}}{\mjseqn{\mathrm{count} \, time^{-1}}}
+  \item{\code{fakorede}}{\mjseqn{time \, \mathrm{count}^{-1}}}
 }
 \description{
 Compute the Emergence rate index or Germination rate index according to
@@ -51,7 +57,8 @@ and
   rate Index (\mjseqn{ERI}).
 
   \subsection{\insertCite{shmueliEmergenceEarlyGrowth1971;textual}{germinationmetrics}}{
-   It is estimated as follows.
+   With argument \code{method} specified as \code{"shmueligoldberg"}
+  \mjseqn{ERI} is estimated as follows.
 
   \mjsdeqn{ERI = \sum_{i=i_{0}}^{k-1}N_{i}(k-i)}
 
@@ -65,7 +72,8 @@ and
   \insertCite{de_santana_alise_2004;textual}{germinationmetrics}
   \insertCite{ranal_how_2006}{germinationmetrics} and is estimated by
   dividing Emergence rate index (\mjseqn{ERI}) by total number of emerged
-  seedlings (or germinated seeds) as follows.
+  seedlings (or germinated seeds) as follows with argument \code{method}
+  specified as \code{"sgsantanaranal"}).
 
   \mjsdeqn{ERI_{mod} = \frac{\sum_{i=i_{0}}^{k-1}N_{i}(k-i)}{N_{g}} =
   \frac{ERI}{N_{g}}}
@@ -78,7 +86,8 @@ and
   number of time intervals. }
 
   \subsection{\insertCite{bilbroSoilCrustsCotton1982;textual}{germinationmetrics}}{
-   It is the estimated as follows.
+   With argument \code{method} specified as \code{"bilbrowanjura"}
+  \mjseqn{ERI} is the estimated as follows.
 
   \mjsdeqn{ERI = \frac{\sum_{i=1}^{k}N_{i}}{\overline{T}} =
   \frac{N_{g}}{\overline{T}}}
@@ -90,7 +99,8 @@ and
   the mean germination time or mean emergence time. }
 
   \subsection{\insertCite{fakoredeRelationSeedlingVigor1980,fakoredeVariabilitySeedlingVigour1981,fakoredeHeteroticEffectsAssociation1983;textual}{germinationmetrics}}{
-   It is estimated as follows.
+   With argument \code{method} specified as \code{"fakorede"} \mjseqn{ERI} is
+  the estimated as follows.
 
   \mjsdeqn{ERI = \frac{\overline{T}}{FGP/100}}
 
@@ -118,9 +128,9 @@ int <- 1:length(x)
 #----------------------------------------------------------------------------
 EmergenceRateIndex(germ.counts = x, intervals = int)
 EmergenceRateIndex(germ.counts = x, intervals = int,
-                   method = "melville")
+                   method = "shmueligoldberg")
 EmergenceRateIndex(germ.counts = x, intervals = int,
-                   method = "melvillesantanaranal")
+                   method = "sgsantanaranal")
 EmergenceRateIndex(germ.counts = x, intervals = int,
                    method = "bilbrowanjura")
 EmergenceRateIndex(germ.counts = x, intervals = int,
@@ -130,9 +140,9 @@ EmergenceRateIndex(germ.counts = x, intervals = int,
 #----------------------------------------------------------------------------
 EmergenceRateIndex(germ.counts = y, intervals = int, partial = FALSE,)
 EmergenceRateIndex(germ.counts = y, intervals = int, partial = FALSE,
-                   method = "melville")
+                   method = "shmueligoldberg")
 EmergenceRateIndex(germ.counts = y, intervals = int, partial = FALSE,
-                   method = "melvillesantanaranal")
+                   method = "sgsantanaranal")
 EmergenceRateIndex(germ.counts = y, intervals = int, partial = FALSE,
                    method = "bilbrowanjura")
 EmergenceRateIndex(germ.counts = y, intervals = int, partial = FALSE,

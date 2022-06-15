@@ -1,3 +1,18 @@
+# germinationmetrics  0.1.6
+
+## NEW FUNCTIONS:
+* `PeakGermPercent` - Compute peak germination percentage.
+
+## UPDATED FUNCTIONS:
+* `FirstGermTime`, `LastGermTime` and `PeakGermTime` - Updated documentation with formula.
+* `EmergenceRateIndex` - Depreciate erroneous `method` argument options of `melville` and `melvillesantanaranal` and replace them with `shmueligoldberg` and `sgsantanaranal` respectively.
+ `GermSpeedCorrected` - Use germination percentage instead of counts.
+* `EmergenceRateIndex`, `GermIndex`, `GermSpeedCorrected`, `GermValue`, `GermRateRecip` and `TimsonsIndex` - Minor documentation update.
+
+## VIGNETTE:
+* Fixed fetching CRAN page for version history to fail gracefully when access is down.
+* Updated units in Table 3.
+
 # germinationmetrics  0.1.5
 
 ## NEW FUNCTIONS:
@@ -5,6 +20,9 @@
 
 ## UPDATED FUNCTIONS:
 * `FourPHFfit` - Added warning for low germination percentages. Modified to return `NA` output for zero total germination inputs with non-converging fits so as not to break `FourPHFfit.bulk`.
+
+## VIGNETTE:
+* Removed cairo dependency.
 
 # germinationmetrics  0.1.4
 

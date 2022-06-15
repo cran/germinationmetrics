@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-# # Copyright (C) 2017-20, ICAR-NBPGR.
+### Copyright (C) 2017-2022, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -55,7 +55,7 @@
 #' @inheritParams MeanGermTime
 #'
 #' @return For \code{GermUncertainty}, the value of uncertainty of germination
-#'   process.
+#'   process in \mjseqn{\mathrm{bit}}.
 #'
 #'   For \code{GermSynchrony}, the value of synchrony of germination.
 #'

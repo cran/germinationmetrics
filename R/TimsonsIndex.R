@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-20, ICAR-NBPGR.
+### Copyright (C) 2017-2022, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #' Compute George's index
 #' \insertCite{george_influence_1961,tucker_estimating_1965,nichols_two_1968,chopraEffectSoilTemperature1980}{germinationmetrics},
 #' Timson's index or Timson's germination velocity index
-#' \insertCite{grose_laboratory_1958,timson_new_1965,lyonRapidMethodDetermining1966,chaudharyEffectTemperatureAssociated1970,negmEffectsEthyleneCarbon1978,brown_representing_1988,baskin_seeds_1998}{germinationmetrics}
+#' \insertCite{grose_laboratory_1958,timson_new_1965,lyonRapidMethodDetermining1966,chaudharyEffectTemperatureAssociated1970,negm_effects_1978,brown_representing_1988,baskin_seeds_1998}{germinationmetrics}
 #' and it's modifications by Labouriau
 #' \insertCite{ranal_how_2006}{germinationmetrics} and
 #' \insertCite{khan_effect_1984}{germinationmetrics}. \loadmathjax
@@ -51,8 +51,7 @@
 #' germination percentage curve. It is same as the indices for area under time
 #' course curve of germination described by
 #' \insertCite{lyonRapidMethodDetermining1966;textual}{germinationmetrics} as
-#' well as
-#' \insertCite{negmEffectsEthyleneCarbon1978;textual}{germinationmetrics}. It is
+#' well as \insertCite{negm_effects_1978;textual}{germinationmetrics}. It is
 #' also described as Emergence Rate Index (\mjseqn{ERI}) by
 #' \insertCite{chaudharyEffectTemperatureAssociated1970;textual}{germinationmetrics}.
 #'
@@ -71,7 +70,8 @@
 #'
 #' As Timson's index is useful for comparison only when samples have similar
 #' germinabilities or final germination percentage, the following modification
-#' was suggested by Labouriau \insertCite{ranal_how_2006}{germinationmetrics}.
+#' was suggested by Labouriau \insertCite{ranal_how_2006}{germinationmetrics}
+#' (Specified by the argument \code{modification = "labouriau"}).
 #'
 #' \mjsdeqn{\Sigma k_{mod} = \frac{\Sigma k}{\sum_{i=1}^{k}g_{i}}}
 #'
@@ -81,7 +81,8 @@
 #' Similarly another modification was proposed by
 #' \insertCite{khan_effect_1984}{germinationmetrics}, where Timson's index
 #' (\mjseqn{\Sigma k}) is divided by the total time period of germination
-#' (\mjseqn{T_{k}}).
+#' (\mjseqn{T_{k}}) (Specified by the argument \code{modification =
+#' "khanungar"}).
 #'
 #' \mjsdeqn{\Sigma k_{mod} = \frac{\Sigma k}{T_{k}}}
 #'
@@ -115,9 +116,13 @@
 #'   \code{"labouriau"} or \code{"khanungar"}. Default is \code{"none"} (see
 #'   \strong{Details}).
 #'
-#' @return For \code{TimsonsIndex} The value of Timson's index.
+#' @return For \code{TimsonsIndex}, the value of Timson's index (\%) if
+#'   \code{modification = "none"}. If \code{modification = "labouriau"}, then
+#'   value with no unit and if \code{modification = "khanungar"}, then value as
+#'   \% \mjseqn{\mathrm{time^{-1}}}.
 #'
-#'   For \code{GermRateGeorge} The value of George's germination rate.
+#'   For \code{GermRateGeorge} The value of George's germination rate as
+#'   \mjseqn{count time}.
 #'
 #' @references
 #'
