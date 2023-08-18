@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-2022, ICAR-NBPGR.
+### Copyright (C) 2017-2023, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,6 +28,6 @@ if (getRversion() >= "2.15.1")  {
       "GermValue_DP_mod","GermIndex_mod",
       "EmergenceRateIndex_SG", "EmergenceRateIndex_SG_mod",
       "EmergenceRateIndex_BilbroWanjura", "EmergenceRateIndex_Fakorede", ".",
-      "a", "b", "curve", "dfgp", "gp", "y0")
+      "a", "b", "curve", "dfgp", "gp", "y0", "isConv")
   )
 }

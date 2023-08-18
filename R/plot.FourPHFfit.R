@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-2022, ICAR-NBPGR.
+### Copyright (C) 2017-2023, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -138,7 +138,8 @@ plot.FourPHFfit <- function(x, rog = TRUE, t50.total = TRUE, t50.germ = TRUE,
     Gplot <- ggplot(data = df, aes(x = intervals, y = csgp)) +
       geom_point(alpha = 0.5) +
       stat_function(fun = FourPHF, colour = "red2",
-                    args = list(a = a, b = b, c = c, y0 = y0)) +
+                    args = list(a = a, bta = log(b, base = exp(1)),
+                                c = c, y0 = y0)) +
       labs(x = "Time", y = "Germination (%)") +
       theme_bw()
 

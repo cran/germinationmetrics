@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-2022, ICAR-NBPGR.
+### Copyright (C) 2017-2023, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -178,6 +178,13 @@ MeanGermRate <- function(germ.counts, intervals, partial = TRUE) {
     stop("'partial' should be a logical vector of length 1.")
   }
 
+  # Check if data is cumulative
+  if (!partial) {
+    if(is.unsorted(germ.counts)) {
+      stop("'germ.counts' is not cumulative.")
+    }
+  }
+
   # Convert cumulative to partial
   if (!partial) {
     germ.counts <- c(germ.counts[1], diff(germ.counts))
@@ -217,6 +224,12 @@ VarGermRate <- function(germ.counts, intervals, partial = TRUE) {
 SEGermRate <- function(germ.counts, intervals, partial = TRUE) {
 
   VGR <- VarGermRate(germ.counts, intervals, partial)
+
+  # Convert cumulative to partial
+  if (!partial) {
+    germ.counts <- c(germ.counts[1], diff(germ.counts))
+  }
+
   SEGR <- sqrt(VGR/sum(germ.counts))
 
   return(SEGR)

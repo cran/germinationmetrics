@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-2022, ICAR-NBPGR.
+### Copyright (C) 2017-2023, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -159,6 +159,13 @@ PeakValue <- function(germ.counts, intervals, total.seeds, partial = TRUE) {
     stop("'partial' should be a logical vector of length 1.")
   }
 
+  # Check if data is cumulative
+  if (!partial) {
+    if(is.unsorted(germ.counts)) {
+      stop("'germ.counts' is not cumulative.")
+    }
+  }
+
   # Convert cumulative to partial
   if (!partial) {
     germ.counts <- c(germ.counts[1], diff(germ.counts))
@@ -205,6 +212,13 @@ GermValue <- function(germ.counts, intervals, total.seeds, partial = TRUE,
   # Check if argument partial is of type logical with unit length
   if (!is.logical(partial) || length(partial) != 1) {
     stop("'partial' should be a logical vector of length 1.")
+  }
+
+  # Check if data is cumulative
+  if (!partial) {
+    if(is.unsorted(germ.counts)) {
+      stop("'germ.counts' is not cumulative.")
+    }
   }
 
   # Convert cumulative to partial

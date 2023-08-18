@@ -1,6 +1,6 @@
 Package: germinationmetrics
 Title: Seed Germination Indices and Curve Fitting
-Version: 0.1.7
+Version: 0.1.8
 Authors@R: c(
     person(given = "J.", family = "Aravind",
            email = "j.aravind@icar.gov.in",
@@ -21,33 +21,35 @@ Authors@R: c(
     person("ICAR-NBGPR",
            role = "cph",
 		       comment = c(url = "www.nbpgr.ernet.in")))
-Description: Provides functions to compute various germination indices such as
-    germinability, median germination time, mean germination time, mean
-    germination rate, speed of germination, Timson's index, germination value,
-    coefficient of uniformity of germination, uncertainty of germination
-    process, synchrony of germination etc. from germination count data. Includes
-    functions for fitting cumulative seed germination curves using
-    four-parameter hill function and computation of associated parameters. See
-    the vignette for more, including full list of citations for the methods
-    implemented.
-Copyright: 2017-2022, ICAR-NBPGR
+Description: Provides functions to compute various germination indices
+    such as germinability, median germination time, mean germination time,
+    mean germination rate, speed of germination, Timson's index,
+    germination value, coefficient of uniformity of germination,
+    uncertainty of germination process, synchrony of germination etc. from
+    germination count data. Includes functions for fitting cumulative seed
+    germination curves using four-parameter hill function and computation
+    of associated parameters. See the vignette for more, including full
+    list of citations for the methods implemented.
 License: GPL-2 | GPL-3
-Encoding: UTF-8
-LazyData: true
-Depends: R (>= 3.5.0)
-VignetteBuilder: knitr
-RoxygenNote: 7.2.1
-Imports: broom, data.table, ggplot2, ggrepel, mathjaxr, minpack.lm,
-        plyr, Rdpack, utils, stats
-Suggests: knitr, rmarkdown, reshape2, pander, XML, httr, RCurl
-RdMacros: mathjaxr, Rdpack
 URL: https://github.com/aravind-j/germinationmetrics,
         https://aravind-j.github.io/germinationmetrics/
         https://CRAN.R-project.org/package=germinationmetrics
         https://doi.org/10.5281/zenodo.1219630
 BugReports: https://github.com/aravind-j/germinationmetrics/issues
+Depends: R (>= 3.5.0)
+Imports: broom, data.table, ggplot2, ggrepel, mathjaxr, gslnls, plyr,
+        Rdpack, stats, utils
+Suggests: httr, knitr, pander, RCurl, reshape2, rmarkdown, testthat (>=
+        3.0.0), XML
+VignetteBuilder: knitr
+RdMacros: mathjaxr, Rdpack
+Copyright: 2017-2023, ICAR-NBPGR
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
+Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2022-08-28 11:30:02 UTC; J. Aravind
+Packaged: 2023-08-18 17:39:19 UTC; J. Aravind
 Author: J. Aravind [aut, cre] (<https://orcid.org/0000-0002-4791-442X>),
   S. Vimala Devi [aut],
   J. Radhamani [aut],
@@ -56,4 +58,4 @@ Author: J. Aravind [aut, cre] (<https://orcid.org/0000-0002-4791-442X>),
   ICAR-NBGPR [cph] (www.nbpgr.ernet.in)
 Maintainer: J. Aravind <j.aravind@icar.gov.in>
 Repository: CRAN
-Date/Publication: 2022-08-28 11:50:02 UTC
+Date/Publication: 2023-08-18 18:02:32 UTC

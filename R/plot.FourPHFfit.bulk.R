@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-2022, ICAR-NBPGR.
+### Copyright (C) 2017-2023, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -190,7 +190,11 @@ plot.FourPHFfit.bulk <- function(x, rog = FALSE,
     dfcurve <- merge(coefs, data.frame(intervals = seq(min(intervals),
                                                        max(intervals),
                                                        by = 0.1)))
-    dfcurve <- plyr::mutate(dfcurve, csgp = FourPHF(intervals, a, b, c, y0))
+    dfcurve[, c("a", "b", "c", "y0")] <-
+      sapply(dfcurve[, c("a", "b", "c", "y0")], as.numeric)
+    dfcurve <- plyr::mutate(dfcurve, csgp = FourPHF(intervals, a,
+                                                    log(b, base = exp(1)),
+                                                    c, y0))
 
     # Plot
     Gplot <- ggplot(data = dfcurve, aes(x = intervals, y = csgp,
@@ -224,7 +228,7 @@ plot.FourPHFfit.bulk <- function(x, rog = FALSE,
           dfcsgp[, total.seeds.col] * 100
 
         levels(dfcsgp$intervals) <- intervals
-        dfcsgp$intervals <- as.numeric(as.character(dfgp$intervals))
+        dfcsgp$intervals <- as.numeric(as.character(dfcsgp$intervals))
       }
 
       Gplot <- Gplot +
@@ -238,11 +242,14 @@ plot.FourPHFfit.bulk <- function(x, rog = FALSE,
     dfcurve <- merge(coefs, data.frame(intervals = seq(min(intervals),
                                                        max(intervals),
                                                        by = 0.1)))
+    dfcurve[, c("a", "b", "c", "y0")] <-
+      sapply(dfcurve[, c("a", "b", "c", "y0")], as.numeric)
     dfcurve <- plyr::mutate(dfcurve, gp = RateofGerm(intervals, a, b, c))
 
     Gplot <- ggplot(data = dfcurve, aes(x = intervals, y = gp, group = curve)) +
       geom_line(aes_string(colour = group.col))+
-      # geom_point(data = dfgp, aes_string(x = "intervals", y = "gp", colour = group.col),
+      # geom_point(data = dfgp, aes_string(x = "intervals",
+      #            y = "gp", colour = group.col),
       #            alpha = 0.5, inherit.aes = FALSE) +
       labs(x = "Time", y = "Germination (%)") +
       theme_bw()
@@ -250,6 +257,7 @@ plot.FourPHFfit.bulk <- function(x, rog = FALSE,
 
   if (annotate != "none") {
     dfannotate <- x[, c(group.col, acol)]
+    dfannotate[, acol] <- sapply(dfannotate[, acol], as.numeric)
 
     if (annotate != "uniformity") {
       Gplot <- Gplot +

@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-2022, ICAR-NBPGR.
+### Copyright (C) 2017-2023, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 #'
 #' Compute the following metrics:\describe{ \item{\code{MeanGermTime}}{Mean
 #' germination time (\mjseqn{\overline{T}}) or Mean length of incubation time
-#' \insertCite{edmond_effects_1958,czabator_germination_1962,mockColdToleranceAdapted1972,ellis_improved_1980,labouriau_germinacao_1983,ranal_how_2006}{germinationmetrics}.}
+#' \insertCite{edmond_effects_1958,czabator_germination_1962,mock_cold_1972,ellis_improved_1980,labouriau_germinacao_1983,ranal_how_2006}{germinationmetrics}.}
 #' \item{\code{VarGermTime}}{Variance of germination time (\mjseqn{s_{T}^{2}})
 #' \insertCite{labouriau_germinacao_1983,ranal_how_2006}{germinationmetrics}.}
 #' \item{\code{SEGermTime}}{Standard error of germination time
@@ -45,8 +45,8 @@
 #' It is the same as Sprouting Index (\mjseqn{SI}) or Emergence Index
 #' (\mjseqn{EI}) described by
 #' \insertCite{smith_germinating_1964;textual}{germinationmetrics} and
-#' \insertCite{mockColdToleranceAdapted1972;textual}{germinationmetrics} as well
-#' as Germination Resistance (\mjseqn{GR}) described by
+#' \insertCite{mock_cold_1972;textual}{germinationmetrics} as well as
+#' Germination Resistance (\mjseqn{GR}) described by
 #' \insertCite{gordon_observations_1969,gordon_germination_1971;textual}{germinationmetrics}.
 #'
 #' It is the inverse of mean germination rate (\mjseqn{\overline{V}}).
@@ -168,6 +168,13 @@ MeanGermTime <- function(germ.counts, intervals, partial = TRUE) {
     stop("'partial' should be a logical vector of length 1.")
   }
 
+  # Check if data is cumulative
+  if (!partial) {
+    if(is.unsorted(germ.counts)) {
+      stop("'germ.counts' is not cumulative.")
+    }
+  }
+
   # Convert cumulative to partial
   if (!partial) {
     germ.counts <- c(germ.counts[1], diff(germ.counts))
@@ -186,6 +193,12 @@ VarGermTime <- function(germ.counts, intervals, partial = TRUE) {
 
   MGT <- MeanGermTime(germ.counts, intervals, partial)
   intervalsdiff <- (intervals - MGT)^2
+
+  # Convert cumulative to partial
+  if (!partial) {
+    germ.counts <- c(germ.counts[1], diff(germ.counts))
+  }
+
   VGT <- sum(germ.counts*intervalsdiff)/(sum(germ.counts) - 1)
 
   return(VGT)
@@ -196,6 +209,12 @@ VarGermTime <- function(germ.counts, intervals, partial = TRUE) {
 SEGermTime <- function(germ.counts, intervals, partial = TRUE) {
 
   VGT <- VarGermTime(germ.counts, intervals, partial)
+
+  # Convert cumulative to partial
+  if (!partial) {
+    germ.counts <- c(germ.counts[1], diff(germ.counts))
+  }
+
   SEGT <- sqrt(VGT/sum(germ.counts))
 
   return(SEGT)

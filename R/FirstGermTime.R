@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-2022, ICAR-NBPGR.
+### Copyright (C) 2017-2023, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -136,6 +136,13 @@ FirstGermTime <- function(germ.counts, intervals, partial = TRUE) {
     stop("'partial' should be a logical vector of length 1.")
   }
 
+  # Check if data is cumulative
+  if (!partial) {
+    if(is.unsorted(germ.counts)) {
+      stop("'germ.counts' is not cumulative.")
+    }
+  }
+
   # Convert cumulative to partial
   if (!partial) {
     germ.counts <- c(germ.counts[1], diff(germ.counts))
@@ -143,7 +150,7 @@ FirstGermTime <- function(germ.counts, intervals, partial = TRUE) {
 
   df <- data.frame(germ.counts, intervals)
 
-  FGT <- min(which(df$germ.counts != 0))
+  FGT <- intervals[min(which(df$germ.counts != 0))]
 
   return(FGT)
 }
@@ -171,6 +178,13 @@ LastGermTime <-  function(germ.counts, intervals, partial = TRUE) {
     stop("'partial' should be a logical vector of length 1.")
   }
 
+  # Check if data is cumulative
+  if (!partial) {
+    if(is.unsorted(germ.counts)) {
+      stop("'germ.counts' is not cumulative.")
+    }
+  }
+
   # Convert cumulative to partial
   if (!partial) {
     germ.counts <- c(germ.counts[1], diff(germ.counts))
@@ -178,7 +192,7 @@ LastGermTime <-  function(germ.counts, intervals, partial = TRUE) {
 
   df <- data.frame(germ.counts, intervals)
 
-  LGT <- max(which(df$germ.counts != 0))
+  LGT <- intervals[max(which(df$germ.counts != 0))]
 
   return(LGT)
 }
@@ -204,6 +218,13 @@ PeakGermTime <- function(germ.counts, intervals, partial = TRUE) {
   # Check if argument partial is of type logical with unit length
   if (!is.logical(partial) || length(partial) != 1) {
     stop("'partial' should be a logical vector of length 1.")
+  }
+
+  # Check if data is cumulative
+  if (!partial) {
+    if(is.unsorted(germ.counts)) {
+      stop("'germ.counts' is not cumulative.")
+    }
   }
 
   # Convert cumulative to partial
