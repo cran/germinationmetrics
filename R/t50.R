@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-2023, ICAR-NBPGR.
+### Copyright (C) 2017-2025, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -76,7 +76,7 @@
 #' @seealso \code{\link[germinationmetrics]{MeanGermRate}}
 #'
 t50 <- function(germ.counts, intervals, partial = TRUE,
-                        method = c("coolbear", "farooq")) {
+                method = c("coolbear", "farooq")) {
 
   # Check if argument germ.counts is of type numeric
   if (!is.numeric(germ.counts)) {
@@ -131,17 +131,21 @@ t50 <- function(germ.counts, intervals, partial = TRUE,
   }
 
   if (x[1] < xhalf) {
-    nearest <- c(match(max(csx[csx <= xhalf]), csx), match(min(csx[csx >= xhalf]), csx))
-
-    if (nearest[2] == nearest[1]) {
-      t50 <- as.numeric(intervals[nearest[1]])
+    if (length(csx[csx > xhalf]) == 0 |
+        length(csx[csx < xhalf]) == 0) {
+      nearest <- c(max(which(max(csx[csx <= xhalf]) == csx)),
+                   min(which(min(csx[csx >= xhalf]) == csx)))
     } else {
-      if (nearest[2] > nearest[1]) {
-        t50 <- intervals[nearest[1]] + ((xhalf - csx[nearest[1]])*(intervals[nearest[2]] - intervals[nearest[1]]))/(csx[nearest[2]] - csx[nearest[1]])
-      } else {
-        t50 <- NA_real_
-      }
+      nearest <- c(max(which(max(csx[csx < xhalf]) == csx)),
+                   min(which(min(csx[csx > xhalf]) == csx)))
     }
+    flankg <- c(csx[nearest[1]], csx[nearest[2]])
+    fltime <- c(intervals[nearest[1]], intervals[nearest[2]])
+
+    t50 <- intervals[nearest[1]] +
+      ((xhalf - flankg[1]) * (fltime[2] - fltime[1])) /
+      (flankg[2] - flankg[1])
+
   } else {
     if (method == "coolbear") {
       cmt <- "((N + 1)/2) "

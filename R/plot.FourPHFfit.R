@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-2023, ICAR-NBPGR.
+### Copyright (C) 2017-2025, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ plot.FourPHFfit <- function(x, rog = TRUE, t50.total = TRUE, t50.germ = TRUE,
   umin = names(x$Uniformity)[2]
 
 
-  # labels and unifromity positions
+  # labels and uniformity positions
   if (limits == TRUE) {
     ypos <-  90
     ypos2 <-  80

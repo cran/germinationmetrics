@@ -1,6 +1,20 @@
-# germinationmetrics  0.1.8
+# germinationmetrics  0.1.9
+
+## NEW FUNCTIONS:
+* `geom_line2` - A modification of `ggplot2::geom_line` to plot both lines and points together as an internal function.
+
 ## UPDATED FUNCTIONS:
-* `FirstGermTime`, `LastGermTime`, `TimeSpreadGerm` - Fixed issue with incorrect display of results in case of intervals which are not in days (Thanks to D. Vijay for Dunna.Vijay[at]icar.gov.in).
+* `FourPHFfit` - Added better error handling. Now gracefully fails by returning empty output due to convergence errors or when fitting is not possible.
+* `FourPHFfit.bulk` - Added better convergence error handling. Added grid search for finding starting values.
+* `plot.FourPHFfit.bulk` - Now uses `geom_errorbar` for showing uniformity. Added better plotting without overlap using `geom_line2`.
+* `t50` - Fixes bug causing incorrect results when multiple values of Ni and Nj are present (Thanks to Aude Maugarny @amaugarn).
+* `GermValue` & `GermSpeed` - Updated calculations to ignroe `NaN` values.
+* `EmergenceRateIndex` - Fix error due to missing `total.seeds` argument.
+
+# germinationmetrics  0.1.8
+
+## UPDATED FUNCTIONS:
+* `FirstGermTime`, `LastGermTime`, `TimeSpreadGerm` - Fixed issue with incorrect display of results in case of intervals which are not in days (Thanks to D. Vijay Dunna.Vijay[at]icar.gov.in).
 * `FourPHFfit`, `plot.FourPHFfit` `FourPHFfit.bulk` and `plot.FourPHFfit.bulk` - Replaced fitting using `minpack.lm::nlsLM` with `gslnls::gsl_nls`.
 * `FourPHFfit.bulk` and `plot.FourPHFfit.bulk` - Fixed issue with plotting of cumulative data with `show.points = TRUE` (Thanks to D. Vijay for Dunna.Vijay[at]icar.gov.in).
 * `FourPHFfit.bulk` - Added fit quality evaluation in output.

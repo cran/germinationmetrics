@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-2023, ICAR-NBPGR.
+### Copyright (C) 2017-2025, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -144,6 +144,7 @@
 #' @import gslnls
 #' @importFrom broom glance
 #' @importFrom broom tidy
+#' @importFrom methods is
 #' @importFrom plyr round_any
 #' @importFrom stats coef df integrate predict
 #' @importFrom utils globalVariables
@@ -175,19 +176,6 @@ FourPHFfit <- function(germ.counts, intervals, total.seeds, partial = TRUE,
                        fix.y0 = TRUE, fix.a = TRUE, tmax, xp = c(10, 60),
                        umin = 10, umax = 90, tries = 3) {
 
-  GP <- GermPercent(germ.counts = germ.counts, total.seeds = total.seeds,
-                    partial = partial)
-
-  if (GP == 0) {
-    warning("Final germination percentage is 0%.\n",
-            "The computation is not possible.")
-  } else {
-    if (GP < 10) {
-      warning("Final germination percentage is less than 10%.\n",
-              "The computation may not be appropriate.")
-    }
-  }
-
   # Check if argument germ.counts is of type numeric
   if (!is.numeric(germ.counts)) {
     stop("'germ.counts' should be a numeric vector.")
@@ -212,6 +200,20 @@ FourPHFfit <- function(germ.counts, intervals, total.seeds, partial = TRUE,
   # Check if argument total.seeds is of type numeric with unit length
   if (!is.numeric(total.seeds) || length(total.seeds) != 1) {
     stop("'total.seeds' should be a numeric vector of length 1.")
+  }
+
+  # Check GP
+  GP <- GermPercent(germ.counts = germ.counts, total.seeds = total.seeds,
+                    partial = partial)
+
+  if (GP == 0) {
+    warning("Final germination percentage is 0%.\n",
+            "The computation is not possible.")
+  } else {
+    if (GP < 10) {
+      warning("Final germination percentage is less than 10%.\n",
+              "The computation may not be appropriate.")
+    }
   }
 
   # Check if umax is of type numeric with unit length
@@ -328,7 +330,7 @@ FourPHFfit <- function(germ.counts, intervals, total.seeds, partial = TRUE,
   #MGTg <- NA_integer_
   Skewness <- NA_integer_
   isConv <- NA
-  model <- NULL
+  mod <- NULL
 
   uniformity = c(NA_integer_, NA_integer_, NA_integer_)
   names(uniformity) <- c(umax, umin, "uniformity")
@@ -353,9 +355,88 @@ FourPHFfit <- function(germ.counts, intervals, total.seeds, partial = TRUE,
     if (mean(peakg) <= 3) {
       startb <- 20
     }
+    if (csgp[1] >= 10 || csgp[2] >= 10 && csgp[3] >= 60) {
+      startb <- 10
+    }
     startbta <- log(startb, base = exp(1))
     startc <- t50(germ.counts, intervals, partial = TRUE, method = "coolbear")
     starty0 <- 0
+
+    # test starting values
+    tryStart <-
+      FourPHF_withWE(data = df,
+                     fix.a = fix.a, fix.y0 = fix.y0,
+                     starta = starta, startbta = startbta,
+                     startc = startc, starty0 = starty0,
+                     maxiter = 1024)
+    # To check for singular gradient matrix as in gsl_nls only a warning is
+    # shown instead of an error in gsl_nls and minpack.lm
+    tryStart_summ <-  tryCatch(summary(tryStart),
+                               error = function(e) e)
+
+    # Test grid of starting values
+    if (inherits(tryStart, "error") |
+        inherits(tryStart_summ, "error")) {
+      startgrid <- expand.grid(starta = starta,
+                               startb = c(0.0000001, 2, 5,
+                                          seq(from = 10, to = 100, by = 10)),
+                               startc = startc, starty0 = starty0)
+      startgrid$startbta <- log(startgrid$startb, base = exp(1))
+
+      nls_fitlist <- vector("list", nrow(startgrid))
+
+      for (i in 1:nrow(startgrid)) {
+
+        nls_fitlist[[i]] <-
+          FourPHF_withWE(data = df,
+                         fix.a = fix.a, fix.y0 = fix.y0,
+                         starta = startgrid[i, "starta"],
+                         startbta = startgrid[i, "startbta"],
+                         startc = startgrid[i, "startc"],
+                         starty0 = startgrid[i, "starty0"], maxiter = 1024)
+      }
+
+
+      isnls <- unlist(lapply(nls_fitlist, function(x) is(x, "nls")))
+
+      # Workaround for gls_nls summary error
+      # when there is singular gradient matrix at parameter estimates
+      isnlssumm <- unlist(lapply(nls_fitlist, function(x) {
+        out <- tryCatch(summary(x), error = function(e) e)
+        inherits(out, "error")
+      }))
+
+      isnls <- isnls & (!isnlssumm)
+
+      if (any(isnls)) {
+        nls_fitlist <- nls_fitlist[isnls]
+
+        nls_fitdf <-
+          lapply(nls_fitlist, function(x) {
+            cdf <- data.frame(t(coef(x)))
+            colnames(cdf) <- paste("start", colnames(cdf), sep = "")
+            cbind(cdf, broom::glance(x))
+          })
+
+        nls_fitdf <- do.call(rbind, nls_fitdf)
+        nls_fitdf <- nls_fitdf[nls_fitdf$isConv == TRUE, ]
+        sel_ind <- which.min(nls_fitdf$deviance)
+
+        starta <- ifelse("starta" %in% colnames(nls_fitdf),
+                         nls_fitdf[sel_ind, "starta"],
+                         starta)
+        startbta <- ifelse("startbta" %in% colnames(nls_fitdf),
+                           nls_fitdf[sel_ind, "startbta"],
+                           startbta)
+        startc <- ifelse("startc" %in% colnames(nls_fitdf),
+                         nls_fitdf[sel_ind, "startc"],
+                         startc)
+        starty0 <- ifelse("starty0" %in% colnames(nls_fitdf),
+                          nls_fitdf[sel_ind, "starty0"],
+                          starty0)
+      }
+
+    }
 
     msg <- ""
 
@@ -460,66 +541,20 @@ FourPHFfit <- function(germ.counts, intervals, total.seeds, partial = TRUE,
     for (i in 1:tries) {
       # check if convergence possible with start values
       possibleError <-
-        tryCatch(
+        FourPHF_withWE(data = df,
+                       fix.a = fix.a, fix.y0 = fix.y0,
+                       starta = starta, startbta = startbta,
+                       startc = startc, starty0 = starty0,
+                       maxiter = 1024)
 
-          if (TRUE %in% c(fix.y0, fix.a)) {
-
-            if (fix.a == FALSE & fix.y0 == TRUE) {
-
-              gsl_nls(
-                csgp ~ FourPHF_fixy0(x = intervals, a, bta, c),
-                data = df,
-                algorithm = "lm",
-                start = list(a = starta, bta = startbta, c = startc),
-                control = list(maxiter = 1024, warnOnly = FALSE,
-                               scale = "levenberg"))
-
-            }
-
-            if (fix.a == TRUE & fix.y0 == FALSE) {
-
-              gsl_nls(
-                csgp ~ FourPHF_fixa(x = intervals, a = max(csgp), bta, c, y0),
-                data = df,
-                algorithm = "lm",
-                start = list(bta = startbta, c = startc, y0 = starty0),
-                control = list(maxiter = 1024, warnOnly = FALSE,
-                               scale = "levenberg"))
-
-            }
-
-            if (fix.a == TRUE & fix.y0 == TRUE) {
-
-              gsl_nls(
-                csgp ~ FourPHF_fixa_fixy0(x = intervals, a = max(csgp),
-                                          bta, c),
-                data = df,
-                algorithm = "lm",
-                start = list(bta = startbta, c = startc),
-                control = list(maxiter = 1024, warnOnly = FALSE,
-                               scale = "levenberg"))
-            }
-
-          } else {
-
-            gsl_nls(
-              csgp ~ FourPHF(x = intervals, a, bta, c, y0),
-              data = df,
-              algorithm = "lm",
-              start = list(a = starta, bta = startbta,
-                           c = startc, y0 = starty0),
-              control = list(maxiter = 1024, warnOnly = FALSE,
-                             scale = "levenberg"))
-
-          },
-
-          error = function(e) e)
-
-      if (!inherits(possibleError, "error")) {
+      if (!inherits(possibleError, "error") &&
+          possibleError$convInfo$isConv == TRUE) {
 
         mod <- possibleError
         rm(possibleError)
-        msg <- paste(msg, "#", i, ". ", mod$convInfo$stopMessage, " ",
+
+        filler <- ifelse(i == 1, "#", "\n#")
+        msg <- paste(msg, filler, i, ". ", mod$convInfo$stopMessage, " ",
                      sep = "")
         break # break out of loop if convergence is successful
 
@@ -528,88 +563,88 @@ FourPHFfit <- function(germ.counts, intervals, total.seeds, partial = TRUE,
         # suppress warnings and rerun above with warnOnly = TRUE
 
         mod <-
-          tryCatch(
-
-            if (TRUE %in% c(fix.y0, fix.a)) {
-
-              if (fix.a == FALSE & fix.y0 == TRUE) {
-
-                suppressWarnings(
-                  gsl_nls(
-                    csgp ~ FourPHF_fixy0(x = intervals, a, bta, c),
-                    data = df,
-                    algorithm = "lm",
-                    start = list(a = starta, bta = startbta, c = startc),
-                    control = list(maxiter = 1024, warnOnly = FALSE,
-                                   scale = "levenberg")))
-
-              }
-
-              if (fix.a == TRUE & fix.y0 == FALSE) {
-
-                suppressWarnings(
-                  gsl_nls(
-                    csgp ~ FourPHF_fixa(x = intervals, a = max(csgp),
-                                        bta, c, y0),
-                    data = df,
-                    algorithm = "lm",
-                    start = list(bta = startbta, c = startc, y0 = starty0),
-                    control = list(maxiter = 1024, warnOnly = FALSE,
-                                   scale = "levenberg")))
-
-              }
-
-              if (fix.a == TRUE & fix.y0 == TRUE) {
-
-                suppressWarnings(
-                  gsl_nls(
-                    csgp ~ FourPHF_fixa_fixy0(x = intervals, a = max(csgp),
-                                              bta, c),
-                    data = df,
-                    algorithm = "lm",
-                    start = list(bta = startbta, c = startc),
-                    control = list(maxiter = 1024, warnOnly = FALSE,
-                                   scale = "levenberg")))
-              }
-
-            } else {
-
-              suppressWarnings(
-                gsl_nls(
-                  csgp ~ FourPHF(x = intervals, a, bta, c, y0),
-                  data = df,
-                  algorithm = "lm",
-                  start = list(a = starta, bta = startbta,
-                               c = startc, y0 = starty0),
-                  control = list(maxiter = 1024, warnOnly = FALSE,
-                                 scale = "levenberg")))
-
-            },
-
-            error = function(e) e)
+          FourPHF_withWE(data = df,
+                         fix.a = fix.a, fix.y0 = fix.y0,
+                         starta = starta, startbta = startbta,
+                         startc = startc, starty0 = starty0,
+                         maxiter = 1024, warnOnly = TRUE)
 
         # Extract convergence msg
         if (!inherits(mod, "error")) {
-          msg <- paste(msg, "#", i, ". ", mod$convInfo$stopMessage,
+
+          filler <- ifelse(i == 1, "#", "\n#")
+          msg <- paste(msg, filler, i, ". ", mod$convInfo$stopMessage,
                        " ", sep = "")
 
           # Get new start values
           starta <- coef(mod)["a"]
-          startb <- coef(mod)["b"]
+          startbta <- coef(mod)["bta"]
           startc <- coef(mod)["c"]
           starty0 <- 0
 
         } else {
 
-          msg <- paste(msg, "#", i, ". ", mod$message,
+          filler <- ifelse(i == 1, "#", "\n#")
+          msg <- paste(msg, filler, i, ". ", mod$message,
                        " ", sep = "")
+
           break # break out of loop if convergence is NOT successful
         }
-
 
       }
     }
 
+    # "exceeded max number of iterations"
+    if (mod$convInfo$stopCode == 11) {
+
+      starta <- ifelse(is.na(coef(mod)["a"]),
+                       starta,
+                       coef(mod)["a"])
+      startbta <- ifelse(is.na(coef(mod)["bta"]),
+                         startbta,
+                         coef(mod)["bta"])
+      startc <- ifelse(is.na(coef(mod)["c"]),
+                       startc,
+                       coef(mod)["c"])
+      starty0 <- ifelse(is.na(coef(mod)["y0"]),
+                        starty0,
+                        coef(mod)["y0"])
+
+      mod <- FourPHF_withWE(data = df,
+                            fix.a = fix.a, fix.y0 = fix.y0,
+                            starta = starta, startbta = startbta,
+                            startc = startc, starty0 = starty0,
+                            maxiter = 2048, algorithm = "lm")
+      i = i + 1
+      msg <- paste(msg, "\n#", i, ". ", mod$convInfo$stopMessage,
+                   " ", sep = "")
+    }
+
+    # "iteration is not making progress towards solution"
+    if (mod$convInfo$stopCode == 27) {
+
+      starta <- ifelse(is.na(coef(mod)["a"]),
+                       starta,
+                       coef(mod)["a"])
+      startbta <- ifelse(is.na(coef(mod)["bta"]),
+                         startbta,
+                         coef(mod)["bta"])
+      startc <- ifelse(is.na(coef(mod)["c"]),
+                       startc,
+                       coef(mod)["c"])
+      starty0 <- ifelse(is.na(coef(mod)["y0"]),
+                        starty0,
+                        coef(mod)["y0"])
+
+      mod <- FourPHF_withWE(data = df,
+                            fix.a = fix.a, fix.y0 = fix.y0,
+                            starta = starta, startbta = startbta,
+                            startc = startc, starty0 = starty0,
+                            maxiter = 2048, algorithm = "lmaccel")
+      i = i + 1
+      msg <- paste(msg, "\n#", i, ". ", mod$convInfo$stopMessage,
+                   " ", sep = "")
+    }
 
     #===========================================================================
 
@@ -768,7 +803,7 @@ FourPHFfit <- function(germ.counts, intervals, total.seeds, partial = TRUE,
 #'
 #' @param x The explanatory/independent variable value.
 #' @param a Parameter \mjseqn{a}.
-#' @param bta Parameter \mjseqn{e^{\beta}}.
+#' @param bta Parameter \mjseqn{\beta} where \mjseqn{b = e^{\beta}}.
 #' @param b Parameter \mjseqn{b}.
 #' @param c Parameter \mjseqn{c}.
 #' @param y0 Parameter \mjseqn{y_{0}}.
@@ -786,7 +821,7 @@ FourPHF <- function(x, a, bta, c, y0)
 
 #' @rdname FourPHF
 #' @export
-# FPHF with a fixed to fixed to max(csgp)
+# FPHF with a fixed to max(csgp)
 FourPHF_fixa <- function(x, a = 100, bta, c, y0)
 {
   y0 + ((a * (x ^ exp(bta))) /
@@ -817,4 +852,65 @@ FourPHF_fixa_fixy0 <- function(x, a = 100, bta, c)
 RateofGerm <- function(x, a, b, c) {
   (a * b * (c ^ b) * (x ^ (b - 1))) /
     (((c ^ b) + (x ^ b)) ^ 2)
+}
+
+
+FourPHF_withWE <- function(data,
+                           fix.a, fix.y0,
+                           starta, startbta, startc, starty0,
+                           maxiter, algorithm = "lm", warnOnly = FALSE) {
+  tryCatch(
+
+    if (TRUE %in% c(fix.y0, fix.a)) {
+
+      if (fix.a == FALSE & fix.y0 == TRUE) {
+
+        gsl_nls(
+          csgp ~ FourPHF_fixy0(x = intervals, a, bta, c),
+          data = data,
+          algorithm = algorithm,
+          start = list(a = starta, bta = startbta, c = startc),
+          control = list(maxiter = maxiter, warnOnly = warnOnly,
+                         scale = "levenberg"))
+
+      }
+
+      if (fix.a == TRUE & fix.y0 == FALSE) {
+
+        gsl_nls(
+          csgp ~ FourPHF_fixa(x = intervals, a = max(csgp), bta, c, y0),
+          data = data,
+          algorithm = algorithm,
+          start = list(bta = startbta, c = startc, y0 = starty0),
+          control = list(maxiter = maxiter, warnOnly = warnOnly,
+                         scale = "levenberg"))
+
+      }
+
+      if (fix.a == TRUE & fix.y0 == TRUE) {
+
+        gsl_nls(
+          csgp ~ FourPHF_fixa_fixy0(x = intervals, a = max(csgp),
+                                    bta, c),
+          data = data,
+          algorithm = algorithm,
+          start = list(bta = startbta, c = startc),
+          control = list(maxiter = maxiter, warnOnly = warnOnly,
+                         scale = "levenberg"))
+      }
+
+    } else {
+
+      gsl_nls(
+        csgp ~ FourPHF(x = intervals, a, bta, c, y0),
+        data = data,
+        algorithm = algorithm,
+        start = list(a = starta, bta = startbta,
+                     c = startc, y0 = starty0),
+        control = list(maxiter = maxiter, warnOnly = warnOnly,
+                       scale = "levenberg"))
+
+    },
+
+    error = function(e) e)
 }

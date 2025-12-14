@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-2023, ICAR-NBPGR.
+### Copyright (C) 2017-2025, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -59,6 +59,7 @@
 #' @seealso \code{\link[germinationmetrics]{FourPHFfit.bulk}}
 #'
 #' @import ggplot2
+#' @importFrom dplyr bind_rows
 #' @importFrom plyr mutate
 #' @importFrom plyr round_any
 #' @method plot FourPHFfit.bulk
@@ -180,10 +181,12 @@ plot.FourPHFfit.bulk <- function(x, rog = FALSE,
   #                     FUN = function(i) paste(i, collapse = ""))
   # }
 
+  x$curve <- 1:nrow(x)
+
   df <- x[, c(counts.intervals.cols,
-              total.seeds.col, group.col)]
-  coefs <- x[, c("a", "b", "c", "y0", group.col)]
-  coefs$curve <- 1:nrow(coefs)
+              total.seeds.col, group.col, "curve")]
+  coefs <- x[, c("a", "b", "c", "y0", group.col, "curve")]
+  # coefs$curve <- 1:nrow(coefs)
 
   if (rog == FALSE) { # Plot FPHF curve
     # Calculate curves
@@ -199,7 +202,7 @@ plot.FourPHFfit.bulk <- function(x, rog = FALSE,
     # Plot
     Gplot <- ggplot(data = dfcurve, aes(x = intervals, y = csgp,
                                         group = curve)) +
-      geom_line(aes_string(colour = group.col)) +
+      geom_line(aes(colour = .data[[group.col]])) +
       labs(x = "Time", y = "Germination (%)") +
       theme_bw()
 
@@ -211,7 +214,7 @@ plot.FourPHFfit.bulk <- function(x, rog = FALSE,
           t(apply(dfcsgp[, counts.intervals.cols],
                   1, cumsum))
         dfcsgp <- reshape2::melt(dfcsgp, id.vars = c(group.col,
-                                                     total.seeds.col),
+                                                     total.seeds.col, "curve"),
                                  measure.vars = counts.intervals.cols,
                                  variable.name = "intervals")
         dfcsgp$csgp <- dfcsgp$value /
@@ -221,7 +224,7 @@ plot.FourPHFfit.bulk <- function(x, rog = FALSE,
         dfcsgp$intervals <- as.numeric(as.character(dfcsgp$intervals))
       } else{
         dfcsgp <- reshape2::melt(df, id.vars = c(group.col,
-                                                 total.seeds.col),
+                                                 total.seeds.col, "curve"),
                                  measure.vars = counts.intervals.cols,
                                  variable.name = "intervals")
         dfcsgp$csgp <- dfcsgp$value /
@@ -231,10 +234,33 @@ plot.FourPHFfit.bulk <- function(x, rog = FALSE,
         dfcsgp$intervals <- as.numeric(as.character(dfcsgp$intervals))
       }
 
-      Gplot <- Gplot +
-        geom_point(data = dfcsgp, aes_string(x = "intervals", y = "csgp",
-                                             colour = group.col),
-                   alpha = 0.5, inherit.aes = FALSE)
+      dfcurve$curve <- as.factor(dfcurve$curve)
+      dfcsgp$curve <- as.factor(dfcsgp$curve)
+
+      dfcsgp$sel <- TRUE
+      dfcurve$sel <- FALSE
+      dfcurve2 <- dplyr::bind_rows(list(dfcurve, dfcsgp))
+
+      dfcurve2$inc <- FALSE
+
+      # dfcurve2$sel <- as.factor(dfcurve2$sel)
+
+      # Gplot <- Gplot +
+      #   # geom_point(data = dfcsgp, aes_string(x = "intervals", y = "csgp",
+      #   #                                      colour = group.col),
+      #   #            alpha = 0.5, inherit.aes = FALSE)
+      #   geom_point(data = dfcsgp, aes(x = intervals, y = csgp,
+      #                                 colour = .data[[group.col]]),
+      #              alpha = 0.5, inherit.aes = FALSE)
+      Gplot <-
+        ggplot(data = dfcurve2, aes(x = intervals, y = csgp,
+                                    group = curve,
+                                    colour = .data[[group.col]],
+                                    show.points = sel,
+                                    include.points = inc)) +
+        geom_line2() +
+        labs(x = "Time", y = "Germination (%)") +
+        theme_bw()
     }
 
   } else { # Plot ROG curve
@@ -247,7 +273,7 @@ plot.FourPHFfit.bulk <- function(x, rog = FALSE,
     dfcurve <- plyr::mutate(dfcurve, gp = RateofGerm(intervals, a, b, c))
 
     Gplot <- ggplot(data = dfcurve, aes(x = intervals, y = gp, group = curve)) +
-      geom_line(aes_string(colour = group.col))+
+      geom_line(aes(colour = .data[[group.col]])) +
       # geom_point(data = dfgp, aes_string(x = "intervals",
       #            y = "gp", colour = group.col),
       #            alpha = 0.5, inherit.aes = FALSE) +
@@ -262,25 +288,15 @@ plot.FourPHFfit.bulk <- function(x, rog = FALSE,
     if (annotate != "uniformity") {
       Gplot <- Gplot +
         geom_vline(data = dfannotate,
-                   aes_string(xintercept = acol, colour = group.col),
+                   aes(xintercept = .data[[acol]], colour = .data[[group.col]]),
                    linetype = "dashed")
     } else {
       Gplot <- Gplot +
-        geom_point(data = dfannotate,
-                       aes_string(x = acol[1],
-                                  y = ypos2, colour = group.col),
-                       inherit.aes = FALSE, pch = 18,
-                       position = position_dodge(5)) +
-        geom_point(data = dfannotate,
-                   aes_string(x = acol[2],
-                              y = ypos2, colour = group.col),
-                   inherit.aes = FALSE, pch = 18,
-                   position = position_dodge(5)) +
-        geom_linerange(data = dfannotate,
-                     aes_string(xmin = acol[1], xmax = acol[2],
-                                y = ypos2, colour = group.col),
-                     inherit.aes = FALSE,
-                     position = position_dodge(5))
+        geom_errorbar(data = dfannotate,
+                      aes(xmin = .data[[acol[1]]], xmax = .data[[acol[2]]],
+                          y = ypos2, colour = .data[[group.col]], width = 10),
+                      inherit.aes = FALSE,
+                      position = position_dodge(5))
     }
 
   }

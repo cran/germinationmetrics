@@ -1,6 +1,6 @@
 ### This file is part of 'germinationmetrics' package for R.
 
-### Copyright (C) 2017-2023, ICAR-NBPGR.
+### Copyright (C) 2017-2025, ICAR-NBPGR.
 #
 # germinationmetrics is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -121,27 +121,32 @@
 #'
 #' # From partial germination counts
 #' #----------------------------------------------------------------------------
-#' EmergenceRateIndex(germ.counts = x, intervals = int)
-#' EmergenceRateIndex(germ.counts = x, intervals = int,
+#' EmergenceRateIndex(germ.counts = x, intervals = int, total.seeds = 50)
+#' EmergenceRateIndex(germ.counts = x, intervals = int, total.seeds = 50,
 #'                    method = "shmueligoldberg")
-#' EmergenceRateIndex(germ.counts = x, intervals = int,
+#' EmergenceRateIndex(germ.counts = x, intervals = int, total.seeds = 50,
 #'                    method = "sgsantanaranal")
-#' EmergenceRateIndex(germ.counts = x, intervals = int,
+#' EmergenceRateIndex(germ.counts = x, intervals = int, total.seeds = 50,
 #'                    method = "bilbrowanjura")
-#' EmergenceRateIndex(germ.counts = x, intervals = int,
-#'                    total.seeds = 50, method = "fakorede")
+#' EmergenceRateIndex(germ.counts = x, intervals = int, total.seeds = 50,
+#'                    method = "fakorede")
 #'
 #' # From cumulative germination counts
 #' #----------------------------------------------------------------------------
-#' EmergenceRateIndex(germ.counts = y, intervals = int, partial = FALSE)
-#' EmergenceRateIndex(germ.counts = y, intervals = int, partial = FALSE,
+#' EmergenceRateIndex(germ.counts = y, intervals = int, total.seeds = 50,
+#'                    partial = FALSE)
+#' EmergenceRateIndex(germ.counts = y, intervals = int, total.seeds = 50,
+#'                    partial = FALSE,
 #'                    method = "shmueligoldberg")
-#' EmergenceRateIndex(germ.counts = y, intervals = int, partial = FALSE,
+#' EmergenceRateIndex(germ.counts = y, intervals = int, total.seeds = 50,
+#'                    partial = FALSE,
 #'                    method = "sgsantanaranal")
-#' EmergenceRateIndex(germ.counts = y, intervals = int, partial = FALSE,
+#' EmergenceRateIndex(germ.counts = y, intervals = int, total.seeds = 50,
+#'                    partial = FALSE,
 #'                    method = "bilbrowanjura")
-#' EmergenceRateIndex(germ.counts = y, intervals = int, partial = FALSE,
-#'                    total.seeds = 50, method = "fakorede")
+#' EmergenceRateIndex(germ.counts = y, intervals = int, total.seeds = 50,
+#'                    partial = FALSE,
+#'                    method = "fakorede")
 #'
 #' @seealso \code{\link[germinationmetrics]{GermSpeed}},
 #'   \code{\link[germinationmetrics]{TimsonsIndex}},
@@ -182,12 +187,21 @@ EmergenceRateIndex <- function(germ.counts, intervals, partial = TRUE,
     stop("'partial' should be a logical vector of length 1.")
   }
 
+  # Check if argument total.seeds is of type numeric with unit length
+  if (!is.numeric(total.seeds) || length(total.seeds) != 1) {
+    stop("'total.seeds' should be a numeric vector of length 1.")
+  }
+
   # Check if data is cumulative
   if (!partial) {
     if(is.unsorted(germ.counts)) {
       stop("'germ.counts' is not cumulative.")
     }
   }
+
+  # Check if GP is 0
+  GP <- GermPercent(germ.counts = germ.counts, total.seeds = total.seeds,
+                    partial = partial)
 
   # Convert cumulative to partial
   if (!partial) {
@@ -210,6 +224,22 @@ EmergenceRateIndex <- function(germ.counts, intervals, partial = TRUE,
   # Check method
   method <- match.arg(method)
 
+  # Warning when GP is 0
+  if (method == "shmueligoldberg") {
+    if (GP == 0) {
+      warning("Final germination percentage is 0%.\n",
+              "The computation of 'EmergenceRateIndex'",
+              "with method == 'shmueligoldberg' is not possible.")
+    }
+  }
+  if (method == "sgsantanaranal") {
+    if (GP == 0) {
+      warning("Final germination percentage is 0%.\n",
+              "The computation of 'EmergenceRateIndex'",
+              "with method == 'sgsantanaranal' is not possible.")
+    }
+  }
+
   if (method == "fakorede") {
     # Check if argument total.seeds is of type numeric with unit length
     if (!is.numeric(total.seeds) || length(total.seeds) != 1) {
@@ -217,20 +247,24 @@ EmergenceRateIndex <- function(germ.counts, intervals, partial = TRUE,
     }
   }
 
-  if (method == "shmueligoldberg") {
-    startindex <- min(which(germ.counts != 0))
-    Ni <- germ.counts[startindex:(length(germ.counts) - 1)]
-    kminusi <- (length(germ.counts) - seq_along(intervals))
-    kminusi <- kminusi[startindex:(length(germ.counts) - 1)]
-    ERI <- sum(Ni * kminusi)
-  }
+  ERI <- NA_integer_
 
-  if (method == "sgsantanaranal") {
-    startindex <- min(which(germ.counts != 0))
-    Ni <- germ.counts[startindex:(length(germ.counts) - 1)]
-    kminusi <- (length(germ.counts) - seq_along(intervals))
-    kminusi <- kminusi[startindex:(length(germ.counts) - 1)]
-    ERI <- sum(Ni * kminusi)/sum(germ.counts)
+  if (GP > 0) {
+    if (method == "shmueligoldberg") {
+      startindex <- min(which(germ.counts != 0))
+      Ni <- germ.counts[startindex:(length(germ.counts) - 1)]
+      kminusi <- (length(germ.counts) - seq_along(intervals))
+      kminusi <- kminusi[startindex:(length(germ.counts) - 1)]
+      ERI <- sum(Ni * kminusi)
+    }
+
+    if (method == "sgsantanaranal") {
+      startindex <- min(which(germ.counts != 0))
+      Ni <- germ.counts[startindex:(length(germ.counts) - 1)]
+      kminusi <- (length(germ.counts) - seq_along(intervals))
+      kminusi <- kminusi[startindex:(length(germ.counts) - 1)]
+      ERI <- sum(Ni * kminusi)/sum(germ.counts)
+    }
   }
 
   if (method == "bilbrowanjura") {
